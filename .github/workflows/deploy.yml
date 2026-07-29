@@ -1,0 +1,57 @@
+name: Build & Deploy ke VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # bisa dijalankan manual dari tab Actions
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build situs
+        run: npm run build
+
+      - name: Cek link internal mati (gerbang SEO)
+        run: npm run linkcheck
+
+      - name: Siapkan SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "${{ secrets.SSH_PORT || 22 }}" -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Verifikasi DEPLOY_PATH tidak kosong (pagar rsync --delete)
+        run: |
+          if [ -z "${{ secrets.DEPLOY_PATH }}" ]; then
+            echo "DEPLOY_PATH kosong — batalkan demi mencegah --delete di path salah." && exit 1
+          fi
+
+      - name: Deploy ke VPS (rsync)
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.SSH_PORT || 22 }}" \
+            dist/ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/"
+
+      - name: Bersihkan SSH key
+        if: always()
+        run: rm -f ~/.ssh/id_ed25519
