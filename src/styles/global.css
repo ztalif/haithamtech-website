@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* Token desain — Tailwind v4 (SPEC §7).
+   Token di sini otomatis jadi utility: bg-primary, text-ink, rounded-xl, dst.
+   JANGAN membuat tailwind.config.js — tidak dipakai di v4. */
+@theme {
+  /* Warna aksen & tombol */
+  --color-primary: #3bb4a8;
+  --color-primary-dark: #2f9b91;
+  --color-accent: #f5b454;
+
+  /* Netral: latar terang, teks abu gelap (bukan hitam pekat) */
+  --color-surface: #ffffff;
+  --color-surface-soft: #f7faf9;
+  --color-ink: #2b3338;
+  --color-ink-soft: #5b686f;
+  --color-line: #e3ebe9;
+
+  /* Tipografi — TODO: ganti ke Plus Jakarta Sans / Inter bila font sudah di-host lokal (SPEC §7) */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
