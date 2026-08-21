@@ -311,8 +311,10 @@ Kumpulkan semua di `src/consts.ts` (dan env untuk infra). AI writer memakai plac
 
 ## 13. Definition of Done (v1)
 
-- [ ] Proyek Astro 7 + TS + Tailwind v4 (via `@tailwindcss/vite`, token di `global.css`) berjalan (`npm run dev`, `npm run build` sukses tanpa error).
-- [ ] `astro.config.mjs` menyetel `site: 'https://haithamtech.com'` + `trailingSlash: 'never'`.
+> **Ini juga pelacak progres.** Centang saat kerjaannya benar-benar selesai (`npm run build` exit 0), sebagai bagian dari langkah Commit. Poin yang belum tercentang = belum dikerjakan; jangan simpulkan status dari keberadaan nama file.
+
+- [x] Proyek Astro 7 + TS + Tailwind v4 (via `@tailwindcss/vite`, token di `global.css`) berjalan (`npm run dev`, `npm run build` sukses tanpa error).
+- [x] `astro.config.mjs` menyetel `site: 'https://haithamtech.com'` + `trailingSlash: 'never'`.
 - [ ] Semua halaman ada: Beranda, Layanan (2 seksi paket + cara kerja per paket), Artikel (index + template), Tentang, Kontak, **404**.
 - [ ] Content collection `blog` di `src/content.config.ts` (glob loader, `z.coerce.date()`) berfungsi + minimal 1–2 artikel benih `.md`.
 - [ ] Setiap artikel punya `ArticleCTA`.

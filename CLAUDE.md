@@ -28,10 +28,11 @@
 2. **Plan** — ajukan plan, tunggu persetujuan user sebelum menulis kode.
 3. **Code** — implementasi sesuai plan yang disetujui saja.
 4. **Verify** — `npm run build` harus sukses. Ini yang menentukan "selesai", bukan klaim agent.
-5. **Commit** — kecil dan sering.
+5. **Commit** — kecil dan sering. Centang poin SPEC §13 yang baru selesai dalam commit yang sama.
 
 ### Aturan non-negotiable
 - Sesi dimulai dari working directory bersih (commit/stash dulu).
+- Sebelum menyusun daftar "apa yang bisa dikerjakan": cek checklist SPEC §13 **dan baca isi file** yang relevan. Nama file yang ada ≠ pekerjaannya sudah selesai.
 - Kerjakan **satu bagian SPEC per sesi**. Task tak terkait → sesi baru.
 - **"Selesai" = `npm run build` exit 0**, bukan pernyataan agent.
 - Baca `git diff` sebelum commit — cek tidak ada yang tersentuh di luar niat.
