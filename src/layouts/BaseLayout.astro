@@ -1,0 +1,127 @@
+---
+/**
+ * Layout dasar seluruh halaman: <head> lengkap + persyaratan SEO SPEC §8.
+ *
+ * Header & Footer sengaja TIDAK di sini — itu unit kerja terpisah.
+ * Halaman menyuntik JSON-LD tambahan (Service, BlogPosting, FAQPage) lewat
+ * slot bernama "head".
+ */
+import '../styles/global.css';
+import {
+  SITE_NAME,
+  SITE_DESCRIPTION,
+  SITE_LANG,
+  DEFAULT_OG_IMAGE,
+  AREA_SERVED,
+  OPENING_HOURS_SCHEMA,
+  CONTACT_EMAIL,
+  GSC_VERIFICATION,
+  CF_ANALYTICS_TOKEN,
+} from '../consts';
+
+interface Props {
+  /** Judul halaman. Otomatis diberi sufiks nama situs kecuali `titleTemplate` false. */
+  title: string;
+  /** Meta description unik per halaman. */
+  description?: string;
+  /** Path/URL gambar OG. Dibuat absolut otomatis. */
+  image?: string;
+  /** `website` untuk halaman biasa, `article` untuk artikel blog. */
+  ogType?: 'website' | 'article';
+  /** Setel true untuk halaman yang tidak boleh diindeks (mis. 404). */
+  noindex?: boolean;
+  /** False bila `title` sudah memuat nama merek (mis. Beranda). */
+  titleTemplate?: boolean;
+}
+
+const {
+  title,
+  description = SITE_DESCRIPTION,
+  image = DEFAULT_OG_IMAGE,
+  ogType = 'website',
+  noindex = false,
+  titleTemplate = true,
+} = Astro.props;
+
+// `site` dipatok di astro.config.mjs, jadi Astro.site selalu terdefinisi.
+// Tanpa itu canonical & OG akan relatif — rusak senyap (SPEC §8).
+const site = Astro.site!;
+
+// Normalisasi path agar konsisten `trailingSlash: 'never'`:
+// '/' tetap '/', selain itu buang trailing slash.
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const canonicalURL = new URL(pathname, site);
+const ogImageURL = new URL(image, site);
+
+const pageTitle = titleTemplate ? `${title} — ${SITE_NAME}` : title;
+
+const professionalService = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: SITE_NAME,
+  description: SITE_DESCRIPTION,
+  url: site.href.replace(/\/$/, ''),
+  image: ogImageURL.href,
+  email: CONTACT_EMAIL,
+  areaServed: AREA_SERVED,
+  availableLanguage: SITE_LANG,
+  openingHours: OPENING_HOURS_SCHEMA,
+};
+---
+
+<!doctype html>
+<html lang={SITE_LANG}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph — URL & gambar WAJIB absolut agar ter-scrape saat dibagikan -->
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:locale" content="id_ID" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    {/* Hanya dirender bila placeholder sudah diisi user (SPEC §11). */}
+    {
+      GSC_VERIFICATION && (
+        <meta name="google-site-verification" content={GSC_VERIFICATION} />
+      )
+    }
+    {
+      CF_ANALYTICS_TOKEN && (
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={`{"token": "${CF_ANALYTICS_TOKEN}"}`}
+        />
+      )
+    }
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(professionalService)}
+    />
+
+    <slot name="head" />
+  </head>
+  <body class="bg-surface text-ink">
+    <slot />
+  </body>
+</html>
