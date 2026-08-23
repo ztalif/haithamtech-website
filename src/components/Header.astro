@@ -1,0 +1,65 @@
+---
+/**
+ * Header situs: wordmark + navigasi utama + CTA WhatsApp.
+ *
+ * Tanpa JavaScript sama sekali (SPEC §2.2). Di layar sempit navigasi turun ke
+ * baris berikutnya dan membungkus — dipilih ketimbang menu hamburger karena
+ * itu butuh JS/state untuk lima tautan pendek saja.
+ */
+import { SITE_NAME, NAV_ITEMS, whatsappLink } from '../consts';
+
+// Samakan bentuk path dengan href di NAV_ITEMS (trailingSlash: 'never').
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+
+function isActive(href: string): boolean {
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+---
+
+<header class="border-b border-line bg-surface">
+  <div
+    class="mx-auto flex max-w-5xl flex-col gap-4 px-6 py-4 sm:flex-row sm:items-center sm:justify-between"
+  >
+    <a
+      href="/"
+      class="text-lg font-bold tracking-tight text-ink transition-colors hover:text-primary"
+    >
+      Haitham<span class="text-primary">Tech</span>
+      <span class="sr-only">{SITE_NAME} — beranda</span>
+    </a>
+
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
+      <nav aria-label="Navigasi utama">
+        <ul class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          {
+            NAV_ITEMS.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                  class:list={[
+                    'transition-colors hover:text-primary',
+                    isActive(item.href)
+                      ? 'font-semibold text-primary'
+                      : 'text-ink-soft',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <a
+        href={whatsappLink()}
+        rel="noopener"
+        class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+      >
+        Konsultasi Gratis
+      </a>
+    </div>
+  </div>
+</header>

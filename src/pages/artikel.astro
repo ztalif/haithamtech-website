@@ -1,0 +1,23 @@
+---
+// Placeholder — isi sesungguhnya dibangun di sesi tersendiri (SPEC §5.3).
+// Halaman ini sudah ada sekarang agar navigasi Header/Footer tidak menunjuk
+// ke link mati (gerbang `npm run linkcheck`).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { whatsappLink } from '../consts';
+---
+
+<BaseLayout title="Artikel" description="Artikel seputar AI customer service: otomatisasi CS WhatsApp, chatbot untuk UMKM, dan cara meningkatkan efisiensi layanan pelanggan bisnis Indonesia.">
+  <div class="mx-auto max-w-2xl px-6 py-24">
+    <h1 class="text-3xl font-bold text-ink sm:text-4xl">Artikel</h1>
+    <p class="mt-4 text-ink-soft">Artikel pertama sedang dalam penulisan. Kami akan membahas otomatisasi CS WhatsApp, biaya chatbot AI, dan tanda bisnis Anda butuh CS otomatis 24/7.</p>
+    <p class="mt-8">
+      <a
+        href={whatsappLink()}
+        rel="noopener"
+        class="inline-block rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+      >
+        Konsultasi Gratis via WhatsApp
+      </a>
+    </p>
+  </div>
+</BaseLayout>

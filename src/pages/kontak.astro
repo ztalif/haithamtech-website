@@ -1,0 +1,23 @@
+---
+// Placeholder — isi sesungguhnya dibangun di sesi tersendiri (SPEC §5.5).
+// Halaman ini sudah ada sekarang agar navigasi Header/Footer tidak menunjuk
+// ke link mati (gerbang `npm run linkcheck`).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { whatsappLink } from '../consts';
+---
+
+<BaseLayout title="Kontak" description="Hubungi Haitham Tech lewat WhatsApp atau email untuk konsultasi gratis seputar AI Customer Service Agent bagi bisnis Anda.">
+  <div class="mx-auto max-w-2xl px-6 py-24">
+    <h1 class="text-3xl font-bold text-ink sm:text-4xl">Kontak</h1>
+    <p class="mt-4 text-ink-soft">Cara tercepat menghubungi kami adalah lewat WhatsApp. FAQ dan detail jam operasional akan ditambahkan di halaman ini.</p>
+    <p class="mt-8">
+      <a
+        href={whatsappLink()}
+        rel="noopener"
+        class="inline-block rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+      >
+        Konsultasi Gratis via WhatsApp
+      </a>
+    </p>
+  </div>
+</BaseLayout>

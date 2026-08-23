@@ -72,3 +72,9 @@
 **Keputusan:** `npm run linkcheck` memakai `--skip "^https?://"`, jadi hanya link internal di `dist/` yang diperiksa.
 **Ditolak:** Membiarkan linkinator ikut memeriksa URL absolut eksternal.
 **Alasan:** Ditemukan saat memasang gerbang CI: script lama gagal (exit 1) karena ikut mem-fetch `https://haithamtech.com/` dan `og-image.png` dari tag canonical/OG — domain produksi belum tayang, dan itu memang bukan yang ingin kita jaga. Gerbang yang selalu merah karena sebab di luar kendali repo akan cepat diabaikan, dan gerbang yang diabaikan sama saja tidak ada. SPEC §8 memang menyebut sasarannya "link internal mati". Konsekuensinya: link internal WAJIB ditulis relatif, kalau ditulis absolut ke domain sendiri ia ikut ter-skip dan lolos dari gerbang (dicatat di CLAUDE.md).
+
+## 2026-08-23 — Koreksi: pola `--skip` linkcheck sempat membuat gerbang mandul
+**Keputusan:** Pola skip diperbaiki jadi `--skip "^https?://(?!localhost)"`.
+**Ditolak:** Pola sebelumnya `^https?://` (dipasang beberapa jam lebih awal di hari yang sama).
+**Alasan:** linkinator menyajikan `dist/` lewat server lokal, jadi URL akarnya sendiri adalah `http://localhost:PORT/` — ikut cocok dengan `^https?://` dan ter-skip. Akibatnya crawl berhenti sebelum mulai: "scanned 0 links", exit 0, hijau sempurna tanpa memeriksa apa pun. Gerbang yang selalu hijau sama tidak bergunanya dengan gerbang yang selalu merah, dan lebih berbahaya karena terlihat seperti bukti. Ketahuan saat Header/Footer memasang tautan ke halaman yang belum ada: gerbang tetap hijau padahal ada 4 link mati. Dengan lookahead, 8 link terperiksa dan 4 link mati itu langsung ketangkap.
+**Pelajaran:** angka yang dilaporkan gerbang ("scanned N links") harus ikut dibaca, bukan cuma exit code-nya.

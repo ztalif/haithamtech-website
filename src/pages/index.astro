@@ -1,16 +1,17 @@
 ---
 // Halaman sementara — Beranda sesungguhnya (Hero, social proof, fitur, cara kerja,
 // CTA penutup) dibangun di sesi berikutnya sesuai SPEC §5.1.
+// <main> disediakan BaseLayout, jadi halaman cukup mengisi kontennya.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_NAME, SITE_TAGLINE } from '../consts';
 ---
 
 <BaseLayout title={`${SITE_NAME} — ${SITE_TAGLINE}`} titleTemplate={false}>
-  <main class="mx-auto flex min-h-screen max-w-2xl flex-col justify-center px-6">
+  <div class="mx-auto max-w-2xl px-6 py-24">
     <p class="text-sm font-medium tracking-wide text-primary">{SITE_TAGLINE}</p>
     <h1 class="mt-2 text-4xl font-bold text-ink">{SITE_NAME}</h1>
     <p class="mt-4 text-ink-soft">
       Situs sedang dibangun. Fondasi proyek (Astro, Tailwind v4, TypeScript) sudah siap.
     </p>
-  </main>
+  </div>
 </BaseLayout>
