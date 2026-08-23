@@ -13,7 +13,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "linkcheck": "linkinator ./dist --silent",
+    "linkcheck": "linkinator ./dist --silent --skip \"^https?://\"",
     "astro": "astro"
   },
   "dependencies": {

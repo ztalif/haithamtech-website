@@ -30,6 +30,15 @@
 4. **Verify** — `npm run build` harus sukses. Ini yang menentukan "selesai", bukan klaim agent.
 5. **Commit** — kecil dan sering. Centang poin SPEC §13 yang baru selesai dalam commit yang sama.
 
+### Alur mobile (tanpa akses laptop) — branch + PR
+Dipakai saat sesi dijalankan langsung di repo (mis. Claude Code on the web dari HP), di mana `npm run build` lokal TIDAK bisa dijalankan. Alasannya di `decisions.md` (2026-08-23).
+
+1. **Branch per unit kerja.** Satu sesi = satu bagian SPEC = satu branch pendek. JANGAN commit langsung ke `main`. Tidak ada branch `dev` permanen — branch dibuang setelah merge.
+2. **Verify = CI hijau.** Langkah Verify di loop di atas digantikan workflow `.github/workflows/ci.yml` (`npm run build` + `npm run linkcheck`) yang jalan otomatis di setiap PR ke `main`. **"Selesai" = check PR hijau**, bukan klaim agent — aturannya sama, gerbangnya saja yang pindah tempat.
+3. **Merge lewat PR.** Merge PR = push ke `main` = `deploy.yml` deploy otomatis ke VPS.
+4. `ci.yml` sengaja TANPA secret & TANPA deploy. Jangan tambahkan langkah deploy atau secret SSH ke dalamnya — itu domain `deploy.yml`.
+5. Branch protection `main` (wajib PR + CI hijau) diatur user di setelan GitHub, bukan lewat repo.
+
 ### Aturan non-negotiable
 - Sesi dimulai dari working directory bersih (commit/stash dulu).
 - Sebelum menyusun daftar "apa yang bisa dikerjakan": cek checklist SPEC §13 **dan baca isi file** yang relevan. Nama file yang ada ≠ pekerjaannya sudah selesai.
@@ -49,7 +58,8 @@
 ### Persyaratan konten
 - Setiap halaman: title unik, meta description, canonical absolut, Open Graph, JSON-LD `ProfessionalService` (SPEC §8).
 - Setiap artikel WAJIB punya CTA ke Layanan atau WhatsApp.
-- Setelah build, jalankan `npx linkinator ./dist` — tidak boleh ada link internal mati.
+- Setelah build, jalankan `npm run linkcheck` — tidak boleh ada link internal mati. Script ini sengaja men-skip URL eksternal (`--skip "^https?://"`): gerbangnya soal link internal (SPEC §8), dan domain produksi belum tentu tayang saat CI jalan.
+- Karena itu **tulis link internal sebagai path relatif** (`/layanan`, bukan `https://haithamtech.com/layanan`) — link absolut ke domain sendiri akan ikut ter-skip dan lolos dari gerbang. URL absolut hanya untuk canonical & OG (memang wajib absolut).
 
 ### Keamanan (satu-satunya aset tak-bisa-di-reset di proyek ini)
 - **Tidak pernah ada secret di repo.** `.env` masuk `.gitignore`.

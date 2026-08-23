@@ -1,0 +1,38 @@
+name: CI — Build & Cek Link (gerbang PR)
+
+# Gerbang "selesai" untuk sesi mobile: menggantikan `npm run build` lokal
+# yang tidak bisa dijalankan dari HP. TIDAK menyentuh secret & tidak deploy.
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build situs (astro check + astro build)
+        run: npm run build
+
+      - name: Cek link internal mati (gerbang SEO)
+        run: npm run linkcheck
