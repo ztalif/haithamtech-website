@@ -18,6 +18,8 @@ import {
   AREA_SERVED,
   OPENING_HOURS_SCHEMA,
   CONTACT_EMAIL,
+  HAS_EMAIL,
+  HAS_OPERATING_HOURS,
   GSC_VERIFICATION,
   CF_ANALYTICS_TOKEN,
 } from '../consts';
@@ -58,6 +60,9 @@ const ogImageURL = new URL(image, site);
 
 const pageTitle = titleTemplate ? `${title} — ${SITE_NAME}` : title;
 
+// `email` & `openingHours` hanya disertakan bila datanya benar-benar ada —
+// JSON-LD adalah klaim terstruktur ke mesin pencari, jadi tidak boleh diisi
+// nilai karangan (SPEC §2.8).
 const professionalService = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
@@ -65,10 +70,10 @@ const professionalService = {
   description: SITE_DESCRIPTION,
   url: site.href.replace(/\/$/, ''),
   image: ogImageURL.href,
-  email: CONTACT_EMAIL,
+  ...(HAS_EMAIL ? { email: CONTACT_EMAIL } : {}),
   areaServed: AREA_SERVED,
   availableLanguage: SITE_LANG,
-  openingHours: OPENING_HOURS_SCHEMA,
+  ...(HAS_OPERATING_HOURS ? { openingHours: OPENING_HOURS_SCHEMA } : {}),
 };
 ---
 

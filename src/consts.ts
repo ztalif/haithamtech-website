@@ -12,17 +12,30 @@ export const SITE_DESCRIPTION =
 export const SITE_URL = 'https://haithamtech.com';
 export const SITE_LANG = 'id';
 
+/**
+ * Data kontak. Dikosongkan dengan sengaja selama nilai aslinya belum ada.
+ *
+ * String kosong = "belum diisi". Komponen memakai flag HAS_* di bawah untuk
+ * menyembunyikan elemen yang datanya belum ada, sehingga situs TIDAK PERNAH
+ * menampilkan nomor/email/jam karangan seolah fakta (SPEC §2.8 & §12).
+ * Isi nilainya di sini saja — seluruh situs & JSON-LD ikut hidup otomatis.
+ */
+
 /** TODO: isi nomor WhatsApp asli — format internasional tanpa '+', mis. '62812xxxxxxx'. */
-export const WHATSAPP_NUMBER = '62800000000000';
+export const WHATSAPP_NUMBER = '';
 
 /** TODO: isi email kontak asli. */
-export const CONTACT_EMAIL = 'halo@haithamtech.com';
+export const CONTACT_EMAIL = '';
 
 /** TODO: isi jam operasional / perkiraan waktu respons yang sebenarnya. */
-export const OPERATING_HOURS = 'Senin–Jumat, 09.00–17.00 WIB';
+export const OPERATING_HOURS = '';
 
-/** Dipakai di JSON-LD `openingHours` (format schema.org). Selaraskan dengan OPERATING_HOURS. */
-export const OPENING_HOURS_SCHEMA = 'Mo-Fr 09:00-17:00';
+/** TODO: isi jam operasional versi schema.org (mis. 'Mo-Fr 09:00-17:00'). Selaraskan dengan OPERATING_HOURS. */
+export const OPENING_HOURS_SCHEMA = '';
+
+export const HAS_WHATSAPP = WHATSAPP_NUMBER !== '';
+export const HAS_EMAIL = CONTACT_EMAIL !== '';
+export const HAS_OPERATING_HOURS = OPERATING_HOURS !== '';
 
 /** TODO: isi IP VPS untuk A record DNS (dipakai saat setup, bukan di halaman). */
 export const VPS_IP = 'TODO_VPS_IP';
@@ -37,13 +50,28 @@ export const CF_ANALYTICS_TOKEN = '';
 export const WHATSAPP_DEFAULT_MESSAGE =
   'Halo Haitham Tech, saya tertarik dengan layanan AI Customer Service.';
 
-/** Bangun link wa.me dengan pesan pra-isi (SPEC §9). */
+/**
+ * Bangun link wa.me dengan pesan pra-isi (SPEC §9).
+ *
+ * Selama WHATSAPP_NUMBER kosong, mengembalikan '/kontak' — tombol tetap
+ * berfungsi (dan link internalnya ikut diperiksa `npm run linkcheck`) tanpa
+ * pernah mengirim pengunjung ke nomor karangan.
+ */
 export function whatsappLink(message: string = WHATSAPP_DEFAULT_MESSAGE): string {
+  if (!HAS_WHATSAPP) return '/kontak';
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
-/** Link mailto ke email kontak. */
-export const MAILTO_LINK = `mailto:${CONTACT_EMAIL}`;
+/** Link mailto ke email kontak. Kosong bila CONTACT_EMAIL belum diisi. */
+export const MAILTO_LINK = HAS_EMAIL ? `mailto:${CONTACT_EMAIL}` : '';
+
+/**
+ * Label tombol CTA. Selama nomor WA belum diisi, tombol mengarah ke /kontak,
+ * jadi labelnya tidak boleh menjanjikan WhatsApp.
+ */
+export const WHATSAPP_CTA_LABEL = HAS_WHATSAPP
+  ? 'Konsultasi Gratis via WhatsApp'
+  : 'Hubungi Kami';
 
 /** Navigasi utama (SPEC §5). Tanpa trailing slash — selaras `trailingSlash: 'never'`. */
 export const NAV_ITEMS = [

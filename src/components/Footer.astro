@@ -12,6 +12,9 @@ import {
   CONTACT_EMAIL,
   MAILTO_LINK,
   OPERATING_HOURS,
+  HAS_WHATSAPP,
+  HAS_EMAIL,
+  HAS_OPERATING_HOURS,
   whatsappLink,
 } from '../consts';
 
@@ -48,23 +51,41 @@ const year = new Date().getFullYear();
 
       <div>
         <h2 class="text-sm font-semibold text-ink">Hubungi kami</h2>
+        {/* Tiap baris hanya tampil bila datanya sudah diisi di consts.ts —
+            lebih baik kosong daripada memajang kontak karangan (SPEC §2.8). */}
         <ul class="mt-3 space-y-2 text-sm text-ink-soft">
-          <li>
-            <a
-              href={whatsappLink()}
-              rel="noopener"
-              class="font-medium text-primary transition-colors hover:text-primary-dark"
-            >
-              Chat via WhatsApp
-            </a>
-          </li>
-          <li>
-            <a
-              href={MAILTO_LINK}
-              class="transition-colors hover:text-primary">{CONTACT_EMAIL}</a
-            >
-          </li>
-          <li>{OPERATING_HOURS}</li>
+          {
+            HAS_WHATSAPP && (
+              <li>
+                <a
+                  href={whatsappLink()}
+                  rel="noopener"
+                  class="font-medium text-primary transition-colors hover:text-primary-dark"
+                >
+                  Chat via WhatsApp
+                </a>
+              </li>
+            )
+          }
+          {
+            HAS_EMAIL && (
+              <li>
+                <a href={MAILTO_LINK} class="transition-colors hover:text-primary">
+                  {CONTACT_EMAIL}
+                </a>
+              </li>
+            )
+          }
+          {HAS_OPERATING_HOURS && <li>{OPERATING_HOURS}</li>}
+          {
+            !HAS_WHATSAPP && !HAS_EMAIL && (
+              <li>
+                <a href="/kontak" class="transition-colors hover:text-primary">
+                  Lihat halaman Kontak
+                </a>
+              </li>
+            )
+          }
         </ul>
       </div>
     </div>
