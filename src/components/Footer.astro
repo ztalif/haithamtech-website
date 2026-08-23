@@ -1,0 +1,76 @@
+---
+/**
+ * Footer situs: wordmark + tagline, navigasi, dan jalur kontak (SPEC §5.1.6).
+ *
+ * Link internal ditulis relatif agar ikut terperiksa `npm run linkcheck`
+ * (link absolut ke domain sendiri ter-skip — lihat CLAUDE.md).
+ */
+import {
+  SITE_NAME,
+  SITE_TAGLINE,
+  NAV_ITEMS,
+  CONTACT_EMAIL,
+  MAILTO_LINK,
+  OPERATING_HOURS,
+  whatsappLink,
+} from '../consts';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-16 border-t border-line bg-surface-soft">
+  <div class="mx-auto max-w-5xl px-6 py-12">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+      <div>
+        <p class="text-lg font-bold tracking-tight text-ink">
+          Haitham<span class="text-primary">Tech</span>
+        </p>
+        <p class="mt-2 max-w-xs text-sm text-ink-soft">{SITE_TAGLINE}</p>
+      </div>
+
+      <nav aria-label="Navigasi footer">
+        <h2 class="text-sm font-semibold text-ink">Jelajahi</h2>
+        <ul class="mt-3 space-y-2 text-sm">
+          {
+            NAV_ITEMS.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="text-ink-soft transition-colors hover:text-primary"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <h2 class="text-sm font-semibold text-ink">Hubungi kami</h2>
+        <ul class="mt-3 space-y-2 text-sm text-ink-soft">
+          <li>
+            <a
+              href={whatsappLink()}
+              rel="noopener"
+              class="font-medium text-primary transition-colors hover:text-primary-dark"
+            >
+              Chat via WhatsApp
+            </a>
+          </li>
+          <li>
+            <a
+              href={MAILTO_LINK}
+              class="transition-colors hover:text-primary">{CONTACT_EMAIL}</a
+            >
+          </li>
+          <li>{OPERATING_HOURS}</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="mt-10 border-t border-line pt-6 text-xs text-ink-soft">
+      &copy; {year} {SITE_NAME}. Seluruh hak cipta dilindungi.
+    </p>
+  </div>
+</footer>

@@ -2,11 +2,14 @@
 /**
  * Layout dasar seluruh halaman: <head> lengkap + persyaratan SEO SPEC §8.
  *
- * Header & Footer sengaja TIDAK di sini — itu unit kerja terpisah.
+ * Header & Footer dipasang di sini agar konsisten di seluruh halaman; isi
+ * halaman masuk lewat <slot /> di dalam <main>.
  * Halaman menyuntik JSON-LD tambahan (Service, BlogPosting, FAQPage) lewat
  * slot bernama "head".
  */
 import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import {
   SITE_NAME,
   SITE_DESCRIPTION,
@@ -121,7 +124,17 @@ const professionalService = {
 
     <slot name="head" />
   </head>
-  <body class="bg-surface text-ink">
-    <slot />
+  <body class="flex min-h-screen flex-col bg-surface text-ink">
+    <a
+      href="#konten"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-white"
+    >
+      Lewati ke konten utama
+    </a>
+    <Header />
+    <main id="konten" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
   </body>
 </html>
