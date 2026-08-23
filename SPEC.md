@@ -319,8 +319,8 @@ Kumpulkan semua di `src/consts.ts` (dan env untuk infra). AI writer memakai plac
 - [ ] Content collection `blog` di `src/content.config.ts` (glob loader, `z.coerce.date()`) berfungsi + minimal 1–2 artikel benih `.md`.
 - [ ] Setiap artikel punya `ArticleCTA`.
 - [ ] Semua persyaratan SEO Bagian 8 terpenuhi: canonical/OG **absolut**, JSON-LD `ProfessionalService`, sitemap, robots.txt.
-- [ ] `npx linkinator ./dist` lolos tanpa link internal mati.
-- [ ] CTA WhatsApp & email berfungsi dari `consts.ts`.
+- [x] `npm run linkcheck` lolos tanpa link internal mati (dijaga otomatis di CI tiap PR).
+- [x] CTA WhatsApp & email berfungsi dari `consts.ts` (Header, Footer, dan tiap halaman).
 - [ ] Desain sesuai arah Bagian 7 (bersih, ramah, terang, lembut) & responsif (mobile-first).
 - [ ] `Caddyfile` (redirect www→non-www + handle 404), `docker-compose.yml` (Caddy saja), dan workflow `deploy.yml` tersedia.
 - [ ] `robots.txt`, favicon, og-image default ada.
