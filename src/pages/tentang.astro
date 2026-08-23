@@ -3,7 +3,7 @@
 // Halaman ini sudah ada sekarang agar navigasi Header/Footer tidak menunjuk
 // ke link mati (gerbang `npm run linkcheck`).
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { whatsappLink } from '../consts';
+import { whatsappLink, WHATSAPP_CTA_LABEL } from '../consts';
 ---
 
 <BaseLayout title="Tentang" description="Mengenal Haitham Tech — siapa di balik layanan AI Customer Service Agent untuk bisnis Indonesia dan apa misinya.">
@@ -16,7 +16,7 @@ import { whatsappLink } from '../consts';
         rel="noopener"
         class="inline-block rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
       >
-        Konsultasi Gratis via WhatsApp
+        {WHATSAPP_CTA_LABEL}
       </a>
     </p>
   </div>
