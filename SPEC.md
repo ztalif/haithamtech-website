@@ -316,8 +316,8 @@ Kumpulkan semua di `src/consts.ts` (dan env untuk infra). AI writer memakai plac
 - [x] Proyek Astro 7 + TS + Tailwind v4 (via `@tailwindcss/vite`, token di `global.css`) berjalan (`npm run dev`, `npm run build` sukses tanpa error).
 - [x] `astro.config.mjs` menyetel `site: 'https://haithamtech.com'` + `trailingSlash: 'never'`.
 - [ ] Semua halaman ada: Beranda, Layanan (2 seksi paket + cara kerja per paket), Artikel (index + template), Tentang, Kontak, **404**.
-- [ ] Content collection `blog` di `src/content.config.ts` (glob loader, `z.coerce.date()`) berfungsi + minimal 1–2 artikel benih `.md`.
-- [ ] Setiap artikel punya `ArticleCTA`.
+- [x] Content collection `blog` di `src/content.config.ts` (glob loader, `z.coerce.date()`) berfungsi + minimal 1–2 artikel benih `.md`.
+- [x] Setiap artikel punya `ArticleCTA`.
 - [ ] Semua persyaratan SEO Bagian 8 terpenuhi: canonical/OG **absolut**, JSON-LD `ProfessionalService`, sitemap, robots.txt.
 - [x] `npm run linkcheck` lolos tanpa link internal mati (dijaga otomatis di CI tiap PR).
 - [x] CTA WhatsApp & email berfungsi dari `consts.ts` (Header, Footer, dan tiap halaman).

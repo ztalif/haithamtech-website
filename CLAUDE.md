@@ -58,7 +58,7 @@ Dipakai saat sesi dijalankan langsung di repo (mis. Claude Code on the web dari 
 ### Persyaratan konten
 - Setiap halaman: title unik, meta description, canonical absolut, Open Graph, JSON-LD `ProfessionalService` (SPEC §8).
 - Setiap artikel WAJIB punya CTA ke Layanan atau WhatsApp.
-- Setelah build, jalankan `npm run linkcheck` — tidak boleh ada link internal mati. Script ini sengaja men-skip URL eksternal (`--skip "^https?://(?!localhost)"`; lookahead `localhost` WAJIB — linkinator menyajikan `dist/` lewat http://localhost, jadi tanpa itu ia men-skip seluruh situs dan gerbangnya jadi mandul): gerbangnya soal link internal (SPEC §8), dan domain produksi belum tentu tayang saat CI jalan.
+- Setelah build, jalankan `npm run linkcheck` — tidak boleh ada link internal mati. Flag `--recurse` WAJIB ada: tanpa itu linkinator hanya memeriksa link yang ada di halaman akar, sehingga tautan di dalam halaman artikel tidak pernah tersentuh gerbang. Script ini sengaja men-skip URL eksternal (`--skip "^https?://(?!localhost)"`; lookahead `localhost` WAJIB — linkinator menyajikan `dist/` lewat http://localhost, jadi tanpa itu ia men-skip seluruh situs dan gerbangnya jadi mandul): gerbangnya soal link internal (SPEC §8), dan domain produksi belum tentu tayang saat CI jalan.
 - Karena itu **tulis link internal sebagai path relatif** (`/layanan`, bukan `https://haithamtech.com/layanan`) — link absolut ke domain sendiri akan ikut ter-skip dan lolos dari gerbang. URL absolut hanya untuk canonical & OG (memang wajib absolut).
 
 ### Keamanan (satu-satunya aset tak-bisa-di-reset di proyek ini)

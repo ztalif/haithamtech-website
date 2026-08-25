@@ -1,0 +1,215 @@
+---
+/**
+ * Layout halaman artikel (SPEC §5.3).
+ *
+ * Membungkus BaseLayout dan menambahkan JSON-LD `BlogPosting` +
+ * `BreadcrumbList` lewat slot "head" yang disediakan BaseLayout (SPEC §8).
+ * CTA di akhir konten dipasang di sini agar TIDAK MUNGKIN lupa dipasang di
+ * artikel mana pun — persyaratannya wajib, jadi tempatnya di layout, bukan
+ * di tiap file .md.
+ */
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import ArticleCTA from '../components/ArticleCTA.astro';
+import { SITE_NAME, DEFAULT_OG_IMAGE } from '../consts';
+
+interface Props {
+  entry: CollectionEntry<'blog'>;
+}
+
+const { entry } = Astro.props;
+const { title, description, publishDate, updatedDate, tags, image, author } =
+  entry.data;
+
+const site = Astro.site!;
+const articleURL = new URL(`/artikel/${entry.id}`, site);
+const ogImageURL = new URL(image ?? DEFAULT_OG_IMAGE, site);
+
+const dateFormatter = new Intl.DateTimeFormat('id-ID', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
+const blogPosting = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  url: articleURL.href,
+  image: ogImageURL.href,
+  datePublished: publishDate.toISOString(),
+  ...(updatedDate ? { dateModified: updatedDate.toISOString() } : {}),
+  author: { '@type': 'Organization', name: author },
+  publisher: { '@type': 'Organization', name: SITE_NAME },
+  inLanguage: 'id',
+  mainEntityOfPage: { '@type': 'WebPage', '@id': articleURL.href },
+  ...(tags.length > 0 ? { keywords: tags.join(', ') } : {}),
+};
+
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Beranda',
+      item: new URL('/', site).href,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Artikel',
+      item: new URL('/artikel', site).href,
+    },
+    { '@type': 'ListItem', position: 3, name: title, item: articleURL.href },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} image={image} ogType="article">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(blogPosting)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumb)} />
+  </Fragment>
+
+  <article class="mx-auto max-w-2xl px-6 py-16 sm:py-24">
+    <nav aria-label="Remah roti" class="text-sm text-ink-soft">
+      <a href="/artikel" class="transition-colors hover:text-primary">
+        &larr; Semua artikel
+      </a>
+    </nav>
+
+    <header class="mt-6">
+      <h1 class="text-3xl font-bold leading-tight text-ink sm:text-4xl">
+        {title}
+      </h1>
+      <p class="mt-4 text-sm text-ink-soft">
+        <time datetime={publishDate.toISOString()}>
+          {dateFormatter.format(publishDate)}
+        </time>
+        {
+          updatedDate && (
+            <>
+              {' · Diperbarui '}
+              <time datetime={updatedDate.toISOString()}>
+                {dateFormatter.format(updatedDate)}
+              </time>
+            </>
+          )
+        }
+      </p>
+      {
+        tags.length > 0 && (
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <li class="rounded-full bg-surface-soft px-3 py-1 text-xs font-medium text-ink-soft">
+                {tag}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    <div class="prosa mt-10">
+      <slot />
+    </div>
+
+    <ArticleCTA />
+  </article>
+</BaseLayout>
+
+<style>
+  /* Styling prosa Markdown ditulis manual, bukan lewat @tailwindcss/typography,
+     agar tidak menambah dependency untuk kebutuhan sekecil ini (SPEC §2.7).
+     `is:global` diperlukan karena isi artikel dirender oleh komponen lain
+     (<Content />), sehingga di luar jangkauan scoping Astro. */
+  .prosa :global(h2) {
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--color-ink);
+  }
+
+  .prosa :global(h3) {
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .prosa :global(p),
+  .prosa :global(ul),
+  .prosa :global(ol) {
+    margin-bottom: 1.25rem;
+    line-height: 1.75;
+    color: var(--color-ink-soft);
+  }
+
+  .prosa :global(ul),
+  .prosa :global(ol) {
+    padding-left: 1.5rem;
+  }
+
+  .prosa :global(ul) {
+    list-style: disc;
+  }
+
+  .prosa :global(ol) {
+    list-style: decimal;
+  }
+
+  .prosa :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .prosa :global(li)::marker {
+    color: var(--color-primary);
+  }
+
+  .prosa :global(strong) {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .prosa :global(a) {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .prosa :global(a:hover) {
+    color: var(--color-primary-dark);
+  }
+
+  .prosa :global(blockquote) {
+    margin: 1.5rem 0;
+    border-left: 3px solid var(--color-primary);
+    padding-left: 1rem;
+    font-style: italic;
+    color: var(--color-ink-soft);
+  }
+
+  .prosa :global(hr) {
+    margin: 2.5rem 0;
+    border: 0;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .prosa :global(img) {
+    margin: 1.5rem 0;
+    border-radius: 0.75rem;
+  }
+
+  .prosa :global(code) {
+    border-radius: 0.25rem;
+    background-color: var(--color-surface-soft);
+    padding: 0.15rem 0.35rem;
+    font-size: 0.9em;
+  }
+</style>

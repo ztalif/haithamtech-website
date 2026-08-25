@@ -1,0 +1,83 @@
+---
+/**
+ * Daftar artikel (SPEC §5.3). URL tetap `/artikel` — sebelumnya file datar
+ * `artikel.astro`, dipindah ke direktori agar `[slug].astro` bisa berdampingan.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { whatsappLink, WHATSAPP_CTA_LABEL } from '../../consts';
+
+// Artikel draft tidak ikut tayang di produksi (SPEC §6).
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
+);
+
+const dateFormatter = new Intl.DateTimeFormat('id-ID', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<BaseLayout
+  title="Artikel"
+  description="Artikel seputar AI customer service: otomatisasi CS WhatsApp, chatbot untuk UMKM, dan cara meningkatkan efisiensi layanan pelanggan bisnis Indonesia."
+>
+  <div class="mx-auto max-w-2xl px-6 py-16 sm:py-24">
+    <h1 class="text-3xl font-bold text-ink sm:text-4xl">Artikel</h1>
+    <p class="mt-4 text-ink-soft">
+      Panduan praktis seputar otomatisasi layanan pelanggan untuk bisnis
+      Indonesia — dari WhatsApp, biaya, sampai kapan sebaiknya mulai.
+    </p>
+
+    {
+      posts.length === 0 ? (
+        <p class="mt-12 rounded-xl border border-line bg-surface-soft px-5 py-4 text-sm text-ink-soft">
+          Artikel pertama sedang dalam penulisan.
+        </p>
+      ) : (
+        <ul class="mt-12 space-y-10">
+          {posts.map((post) => (
+            <li class="border-b border-line pb-10 last:border-0 last:pb-0">
+              <article>
+                <p class="text-sm text-ink-soft">
+                  <time datetime={post.data.publishDate.toISOString()}>
+                    {dateFormatter.format(post.data.publishDate)}
+                  </time>
+                </p>
+                <h2 class="mt-2 text-xl font-bold leading-snug text-ink">
+                  <a
+                    href={`/artikel/${post.id}`}
+                    class="transition-colors hover:text-primary"
+                  >
+                    {post.data.title}
+                  </a>
+                </h2>
+                <p class="mt-3 text-ink-soft">{post.data.description}</p>
+                {post.data.tags.length > 0 && (
+                  <ul class="mt-4 flex flex-wrap gap-2">
+                    {post.data.tags.map((tag) => (
+                      <li class="rounded-full bg-surface-soft px-3 py-1 text-xs font-medium text-ink-soft">
+                        {tag}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </article>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <p class="mt-16">
+      <a
+        href={whatsappLink()}
+        rel="noopener"
+        class="inline-block rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+      >
+        {WHATSAPP_CTA_LABEL}
+      </a>
+    </p>
+  </div>
+</BaseLayout>
