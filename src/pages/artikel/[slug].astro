@@ -1,0 +1,30 @@
+---
+/**
+ * Halaman artikel dinamis dari content collection `blog` (SPEC §5.3).
+ * Memakai API Astro 5+: getCollection() + render().
+ */
+import type { CollectionEntry } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+// Diketik eksplisit: props dari getStaticPaths tidak ikut ter-infer ke
+// Astro.props, sehingga tanpa ini `post` bertipe `unknown`.
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<ArticleLayout entry={post}>
+  <Content />
+</ArticleLayout>
