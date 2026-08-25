@@ -30,14 +30,17 @@
 4. **Verify** — `npm run build` harus sukses. Ini yang menentukan "selesai", bukan klaim agent.
 5. **Commit** — kecil dan sering. Centang poin SPEC §13 yang baru selesai dalam commit yang sama.
 
-### Alur mobile (tanpa akses laptop) — branch + PR
-Dipakai saat sesi dijalankan langsung di repo (mis. Claude Code on the web dari HP), di mana `npm run build` lokal TIDAK bisa dijalankan. Alasannya di `decisions.md` (2026-08-23).
+### Alur baku SEMUA sesi — branch + PR
+Berlaku sama untuk sesi dari laptop maupun dari HP (Claude Code on the web). Sebelumnya ini ditulis sebagai "alur mobile"; disamaratakan 2026-08-25 — alasannya di `decisions.md`.
 
-1. **Branch per unit kerja.** Satu sesi = satu bagian SPEC = satu branch pendek. JANGAN commit langsung ke `main`. Tidak ada branch `dev` permanen — branch dibuang setelah merge.
-2. **Verify = CI hijau.** Langkah Verify di loop di atas digantikan workflow `.github/workflows/ci.yml` (`npm run build` + `npm run linkcheck`) yang jalan otomatis di setiap PR ke `main`. **"Selesai" = check PR hijau**, bukan klaim agent — aturannya sama, gerbangnya saja yang pindah tempat.
-3. **Merge lewat PR.** Merge PR = push ke `main` = `deploy.yml` deploy otomatis ke VPS.
-4. `ci.yml` sengaja TANPA secret & TANPA deploy. Jangan tambahkan langkah deploy atau secret SSH ke dalamnya — itu domain `deploy.yml`.
-5. Branch protection `main` (wajib PR + CI hijau) diatur user di setelan GitHub, bukan lewat repo.
+1. **Branch per unit kerja.** Satu sesi = satu bagian SPEC = satu branch pendek. JANGAN commit langsung ke `main` — branch protection GitHub memang akan menolaknya, termasuk untuk owner. Tidak ada branch `dev` permanen; branch dibuang setelah merge.
+2. **Verify berlapis, bermuara di satu tempat.**
+   - **Dari laptop:** `npm run build` + `npm run linkcheck` lokal WAJIB dijalankan dulu sebelum commit. Ini gerbang tercepat dan tidak boleh dilewati hanya karena CI ada.
+   - **Dari HP:** gerbang lokal itu tidak bisa dijalankan, jadi CI yang menggantikannya.
+   - Keduanya berakhir sama: **"selesai" = check PR hijau**, bukan klaim agent.
+3. **Merge lewat PR.** Merge PR = push ke `main` = `deploy.yml` deploy otomatis ke VPS. Karena menyentuh produksi, agent minta persetujuan user dulu sebelum merge.
+4. `ci.yml` sengaja TANPA secret & TANPA deploy. Jangan tambahkan langkah deploy atau secret SSH ke dalamnya — itu domain `deploy.yml`. Catat juga: `ci.yml` hanya jalan di PR, TIDAK di push ke `main`.
+5. Branch protection `main` diatur user di setelan GitHub, bukan lewat repo. Dua bagian dan keduanya perlu: **wajib PR** (sudah aktif sejak 2026-08-23) DAN **required status check `verify`** (baru dinyalakan 2026-08-25 — sebelumnya kosong, sehingga PR merah pun bisa di-merge).
 
 ### Aturan non-negotiable
 - Sesi dimulai dari working directory bersih (commit/stash dulu).
