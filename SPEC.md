@@ -279,6 +279,8 @@ haithamtech.com {
 - A record `haithamtech.com` → `VPS_IP`.
 - A record (atau CNAME) `www` → domain/`VPS_IP`.
 
+`VPS_IP` di atas adalah nilai yang **user isi langsung di panel DNS**, bukan di repo. Repo ini publik, dan situs statis tidak pernah membaca IP VPS — jadi tidak ada alasan teknis untuk menuliskannya di kode. Untuk deploy, IP-nya masuk GitHub Secrets sebagai `SSH_HOST`.
+
 **Secrets GitHub Actions (dicatat):** `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`, `DEPLOY_PATH`, `SSH_PORT` (bila ≠22).
 
 **Backup:** GitHub adalah sumber kebenaran (kode + artikel). Karena analytics kini di cloud dan tidak ada database di VPS, **tidak ada state berharga di VPS yang perlu di-backup** — blast radius maksimal benar-benar hanya "situs mati sementara". Sarankan developer tetap menyimpan `git clone` lokal sebagai cadangan tambahan.
@@ -301,7 +303,7 @@ Kumpulkan semua di `src/consts.ts` (dan env untuk infra). AI writer memakai plac
 | `WHATSAPP_NUMBER` | Nomor WA format internasional tanpa `+` |
 | `CONTACT_EMAIL` | Email kontak |
 | `OPERATING_HOURS` | Jam operasional / waktu respon |
-| `VPS_IP` | IP VPS untuk DNS |
+| `VPS_IP` | IP VPS untuk DNS. **TIDAK disimpan di `consts.ts`** — repo publik; nilainya hanya di GitHub Secrets (`SSH_HOST`) & catatan setup §10 |
 | `GSC_VERIFICATION` | Kode verifikasi Google Search Console |
 | `CF_ANALYTICS_TOKEN` | Token Cloudflare Web Analytics |
 | Statistik riset industri | Angka + **sumber** untuk social proof (tandai `TODO:` bila belum diverifikasi; jangan sajikan seolah hasil klien) |

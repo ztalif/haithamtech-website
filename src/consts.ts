@@ -37,8 +37,12 @@ export const HAS_WHATSAPP = WHATSAPP_NUMBER !== '';
 export const HAS_EMAIL = CONTACT_EMAIL !== '';
 export const HAS_OPERATING_HOURS = OPERATING_HOURS !== '';
 
-/** TODO: isi IP VPS untuk A record DNS (dipakai saat setup, bukan di halaman). */
-export const VPS_IP = 'TODO_VPS_IP';
+/**
+ * CATATAN: `VPS_IP` sengaja TIDAK ada di file ini.
+ * Situs tidak pernah membutuhkannya, dan repo ini publik — IP asli di sini
+ * hanya menambah permukaan serangan tanpa manfaat. Nilainya hidup di
+ * GitHub Secrets (`SSH_HOST`) dan dicatat sebagai langkah setup di SPEC §10.
+ */
 
 /** TODO: isi kode verifikasi Google Search Console (meta tag). Kosongkan bila belum ada. */
 export const GSC_VERIFICATION = '';
