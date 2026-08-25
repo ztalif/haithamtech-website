@@ -66,6 +66,11 @@ Berlaku sama untuk sesi dari laptop maupun dari HP (Claude Code on the web). Seb
 
 ### Keamanan (satu-satunya aset tak-bisa-di-reset di proyek ini)
 - **Tidak pernah ada secret di repo.** `.env` masuk `.gitignore`.
+- **Repo ini PUBLIK.** Sebelum meng-commit data asli, tentukan dulu kategorinya:
+  1. **Boleh & memang untuk publik** — `WHATSAPP_NUMBER`, `CONTACT_EMAIL`, `OPERATING_HOURS`, `CF_ANALYTICS_TOKEN`, `GSC_VERIFICATION`. Semuanya toh tayang di HTML situs. Syaratnya: pakai nomor & email **bisnis**, jangan yang pribadi.
+  2. **TIDAK BOLEH masuk repo** — `VPS_IP`, kredensial SSH, isi `.env`. Hidup di GitHub Secrets / panel DNS saja. Jangan "menampung" nilainya di `consts.ts` meski terasa rapi: situs tidak membacanya, jadi tidak ada manfaat yang sepadan dengan risikonya.
+  3. **Ragu → tanya user.** Jangan putuskan sendiri.
+- Log GitHub Actions ikut publik. Jangan pernah menambah langkah yang mencetak isi variabel/secret untuk debugging.
 - Kredensial VPS (`SSH_PRIVATE_KEY` dkk.) hanya hidup di GitHub Secrets.
 - `deploy.yml` memakai `rsync --delete` — perintah destruktif. Jangan ubah `DEPLOY_PATH` tanpa verifikasi manual.
 
