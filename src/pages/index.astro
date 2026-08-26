@@ -1,17 +1,26 @@
 ---
-// Halaman sementara — Beranda sesungguhnya (Hero, social proof, fitur, cara kerja,
-// CTA penutup) dibangun di sesi berikutnya sesuai SPEC §5.1.
-// <main> disediakan BaseLayout, jadi halaman cukup mengisi kontennya.
+/**
+ * Beranda (SPEC §5.1) — disusun dari section modular di src/sections/.
+ * Footer (poin 6) sudah dipasang BaseLayout, jadi tidak diulang di sini.
+ * <main> juga dari BaseLayout; halaman cukup mengisi kontennya.
+ */
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../sections/Hero.astro';
+import SocialProof from '../sections/SocialProof.astro';
+import Features from '../sections/Features.astro';
+import HowItWorks from '../sections/HowItWorks.astro';
+import ClosingCTA from '../sections/ClosingCTA.astro';
 import { SITE_NAME, SITE_TAGLINE } from '../consts';
 ---
 
-<BaseLayout title={`${SITE_NAME} — ${SITE_TAGLINE}`} titleTemplate={false}>
-  <div class="mx-auto max-w-2xl px-6 py-24">
-    <p class="text-sm font-medium tracking-wide text-primary">{SITE_TAGLINE}</p>
-    <h1 class="mt-2 text-4xl font-bold text-ink">{SITE_NAME}</h1>
-    <p class="mt-4 text-ink-soft">
-      Situs sedang dibangun. Fondasi proyek (Astro, Tailwind v4, TypeScript) sudah siap.
-    </p>
-  </div>
+<BaseLayout
+  title={`${SITE_NAME} — ${SITE_TAGLINE}`}
+  titleTemplate={false}
+  description="Haitham Tech membangun AI Customer Service Agent untuk bisnis Indonesia: balas pelanggan otomatis 24/7 di WhatsApp, paham produk dan SOP Anda, dengan eskalasi ke tim manusia saat diperlukan."
+>
+  <Hero />
+  <SocialProof />
+  <Features />
+  <HowItWorks />
+  <ClosingCTA />
 </BaseLayout>

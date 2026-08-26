@@ -1,0 +1,66 @@
+---
+/**
+ * Kapabilitas utama (SPEC §5.1.3) — grid 4 kolom.
+ *
+ * Empat kapabilitas ini sengaja dipilih sama dengan yang dijanjikan paket di
+ * halaman Layanan (SPEC §5.2) supaya klaim di Beranda tidak melampaui produk.
+ * Ikon inline SVG (bukan file/dependency) dan dekoratif, jadi aria-hidden.
+ */
+const features = [
+  {
+    title: 'Respon otomatis 24/7',
+    body: 'Pesan yang masuk tengah malam, akhir pekan, atau saat tim sedang penuh tetap dibalas seketika.',
+  },
+  {
+    title: 'Paham produk & jasa Anda',
+    body: 'Agent dilatih dari katalog, daftar harga, dan SOP Anda sendiri — bukan jawaban umum yang mengambang.',
+  },
+  {
+    title: 'Ingat konteks percakapan',
+    body: 'Pelanggan tidak perlu mengulang cerita dari awal; agent mengikuti alur obrolan yang sedang berjalan.',
+  },
+  {
+    title: 'Eskalasi ke manusia',
+    body: 'Pertanyaan di luar kemampuan agent, komplain, atau permintaan khusus dialihkan ke tim Anda.',
+  },
+];
+---
+
+<section class="border-b border-line bg-surface-soft" aria-labelledby="kapabilitas">
+  <div class="mx-auto max-w-5xl px-6 py-16 sm:py-20">
+    <h2 id="kapabilitas" class="text-2xl font-bold text-ink sm:text-3xl">
+      Yang bisa dikerjakan agent Anda
+    </h2>
+    <p class="mt-4 max-w-prose text-ink-soft">
+      Dirancang untuk beban kerja CS sehari-hari bisnis Indonesia — bukan demo
+      chatbot yang cuma bisa menyapa.
+    </p>
+
+    <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        features.map((feature) => (
+          <li class="rounded-2xl border border-line bg-surface p-6">
+            <span
+              class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-5 w-5 text-primary"
+              >
+                <path d="M4 10.5 8 14.5 16 6" />
+              </svg>
+            </span>
+            <h3 class="mt-4 text-base font-semibold text-ink">{feature.title}</h3>
+            <p class="mt-2 text-sm text-ink-soft">{feature.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

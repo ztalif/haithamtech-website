@@ -1,0 +1,80 @@
+---
+/**
+ * Social proof Beranda (SPEC §5.1.2).
+ *
+ * Belum ada klien, jadi TIDAK ADA angka yang bisa terbaca sebagai hasil klien.
+ * Yang ditampilkan: blok ILUSTRASI berlabel jelas (opsi yang direstui SPEC
+ * §5.1.2) + slot logo/testimoni yang sengaja dibiarkan kosong.
+ *
+ * Kartu statistik riset industri ditunda ke sesi tersendiri, menunggu angka
+ * DAN sumber yang bisa diverifikasi — mengarang keduanya dilarang (SPEC §2.8).
+ * Saat sumbernya ada, tambahkan di file ini juga.
+ */
+
+// Perbandingan alur, bukan klaim hasil: keduanya deskripsi cara kerja.
+const tanpaAI = [
+  'Chat masuk di luar jam kerja baru dibalas besok pagi.',
+  'Pertanyaan yang sama (harga, stok, ongkir) diketik ulang berkali-kali.',
+  'Calon pembeli yang tidak sabar pindah ke toko sebelah.',
+];
+
+const denganAI = [
+  'Chat dibalas saat itu juga, termasuk tengah malam dan hari libur.',
+  'Pertanyaan berulang dijawab otomatis dari basis pengetahuan produk Anda.',
+  'Tim manusia fokus ke obrolan yang benar-benar butuh keputusan.',
+];
+---
+
+<section class="border-b border-line bg-surface" aria-labelledby="ilustrasi-alur">
+  <div class="mx-auto max-w-5xl px-6 py-16 sm:py-20">
+    <p class="text-sm font-semibold tracking-wide text-primary uppercase">
+      Ilustrasi
+    </p>
+    <h2 id="ilustrasi-alur" class="mt-3 text-2xl font-bold text-ink sm:text-3xl">
+      Seperti apa bedanya bila CS dibantu AI
+    </h2>
+    <p class="mt-4 max-w-prose text-ink-soft">
+      Gambaran di bawah adalah <strong class="font-semibold text-ink"
+        >ilustrasi alur kerja</strong
+      >, bukan hasil pengukuran atau testimoni klien.
+    </p>
+
+    <div class="mt-10 grid gap-6 sm:grid-cols-2">
+      <div class="rounded-2xl border border-line bg-surface-soft p-6">
+        <h3 class="text-lg font-semibold text-ink">CS ditangani manual</h3>
+        <ul class="mt-4 space-y-3 text-sm text-ink-soft">
+          {
+            tanpaAI.map((item) => (
+              <li class="flex gap-3">
+                <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ink-soft" />
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="rounded-2xl border border-primary/30 bg-primary/5 p-6">
+        <h3 class="text-lg font-semibold text-ink">CS dibantu AI agent</h3>
+        <ul class="mt-4 space-y-3 text-sm text-ink-soft">
+          {
+            denganAI.map((item) => (
+              <li class="flex gap-3">
+                <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    {/* Slot testimoni: dibiarkan kosong dan jujur sampai ada klien nyata.
+        Lebih baik mengakui belum ada daripada memajang angka simulasi. */}
+    <p class="mt-10 rounded-2xl border border-dashed border-line px-6 py-5 text-sm text-ink-soft">
+      Haitham Tech baru mulai, jadi belum ada logo klien atau testimoni yang bisa
+      kami tampilkan di sini — dan kami memilih tidak mengarangnya. Ruang ini
+      akan diisi begitu ada klien yang bersedia namanya dicantumkan.
+    </p>
+  </div>
+</section>

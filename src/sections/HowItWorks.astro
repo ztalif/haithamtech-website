@@ -1,0 +1,57 @@
+---
+/**
+ * Ringkasan cara kerja versi umum (SPEC §5.1.4).
+ *
+ * Sengaja singkat — alur rinci per paket ada di halaman Layanan, dan section
+ * ini menautkan ke sana supaya tidak ada dua sumber kebenaran yang bisa
+ * berbeda saat salah satunya diperbarui.
+ */
+const steps = [
+  {
+    title: 'Konsultasi & pemetaan',
+    body: 'Kita bahas jenis pertanyaan yang paling sering masuk dan bagian mana yang layak diotomatiskan.',
+  },
+  {
+    title: 'Pelatihan agent',
+    body: 'Agent dibekali informasi produk, harga, dan SOP bisnis Anda, lalu gaya bahasanya disesuaikan.',
+  },
+  {
+    title: 'Uji coba bersama',
+    body: 'Anda mencoba sendiri percakapannya, dan kami perbaiki jawaban yang belum pas sebelum tayang.',
+  },
+  {
+    title: 'Jalan & dirawat',
+    body: 'Agent mulai melayani pelanggan; jawabannya diperbarui mengikuti perubahan produk Anda.',
+  },
+];
+---
+
+<section class="border-b border-line bg-surface" aria-labelledby="cara-kerja">
+  <div class="mx-auto max-w-5xl px-6 py-16 sm:py-20">
+    <h2 id="cara-kerja" class="text-2xl font-bold text-ink sm:text-3xl">
+      Cara kerjanya, singkatnya
+    </h2>
+    <p class="mt-4 max-w-prose text-ink-soft">
+      Empat langkah dari obrolan awal sampai agent melayani pelanggan Anda.
+      Rincian per paket ada di <a
+        href="/layanan"
+        class="font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary-dark"
+        >halaman Layanan</a
+      >.
+    </p>
+
+    <ol class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        steps.map((step, index) => (
+          <li class="rounded-2xl border border-line bg-surface-soft p-6">
+            <span class="text-sm font-bold text-primary">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <h3 class="mt-3 text-base font-semibold text-ink">{step.title}</h3>
+            <p class="mt-2 text-sm text-ink-soft">{step.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
