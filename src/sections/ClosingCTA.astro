@@ -1,0 +1,41 @@
+---
+/**
+ * CTA penutup Beranda (SPEC §5.1.5).
+ *
+ * Dua jalur seperti ArticleCTA: chat langsung untuk yang sudah siap, dan
+ * halaman Layanan untuk yang masih menimbang. Selama nomor WA belum diisi,
+ * `whatsappLink()` jatuh ke /kontak dan labelnya ikut menyesuaikan sendiri.
+ */
+import { whatsappLink, WHATSAPP_CTA_LABEL } from '../consts';
+---
+
+<section class="bg-surface" aria-labelledby="cta-penutup">
+  <div class="mx-auto max-w-5xl px-6 py-16 sm:py-20">
+    <div
+      class="rounded-3xl border border-line bg-surface-soft px-6 py-12 text-center sm:px-12"
+    >
+      <h2 id="cta-penutup" class="text-2xl font-bold text-balance text-ink sm:text-3xl">
+        Mulai dari obrolan, bukan dari kontrak
+      </h2>
+      <p class="mx-auto mt-4 max-w-prose text-ink-soft">
+        Ceritakan dulu seperti apa CS bisnis Anda berjalan sekarang. Kalau
+        ternyata belum perlu AI agent, kami akan bilang apa adanya.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a
+          href={whatsappLink()}
+          rel="noopener"
+          class="inline-block rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+        >
+          {WHATSAPP_CTA_LABEL}
+        </a>
+        <a
+          href="/artikel"
+          class="inline-block rounded-full border border-line bg-surface px-6 py-3 text-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
+        >
+          Baca artikelnya dulu
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
