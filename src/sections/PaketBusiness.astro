@@ -1,0 +1,147 @@
+---
+/**
+ * Paket Business (SPEC §5.2) — anchor #business.
+ *
+ * SPEC mendefinisikan paket ini sebagai "semua fitur Basic + 4 tambahan", jadi
+ * yang dirinci di sini hanya yang tambahan; fitur Basic ditautkan balik ke
+ * #basic supaya tidak ada dua daftar yang bisa berbeda saat salah satunya
+ * diperbarui.
+ * Alurnya sengaja lebih panjang daripada Basic — SPEC meminta demikian karena
+ * levelnya memang beda (ada penyiapan database & jalur eskalasi).
+ */
+import { whatsappLink } from '../consts';
+
+const fitur = [
+  {
+    title: 'Kategorisasi Pelanggan Otomatis',
+    body: 'Percakapan yang masuk dikelompokkan sendiri — misalnya calon pembeli, pelanggan lama, atau keluhan.',
+  },
+  {
+    title: 'Database Pelanggan Terstruktur',
+    body: 'Data percakapan dirapikan ke Google Sheets, jadi bisa Anda buka dan olah tanpa aplikasi tambahan.',
+  },
+  {
+    title: 'Analitik Dasar',
+    body: 'Gambaran ringkas soal jumlah percakapan dan pertanyaan yang paling sering muncul.',
+  },
+  {
+    title: 'Eskalasi Cerdas',
+    body: 'Obrolan yang perlu ditangani manusia diserahkan ke tim Anda lewat notifikasi email.',
+  },
+];
+
+const caraKerja = [
+  {
+    title: 'Konsultasi & pemetaan',
+    body: 'Kita telusuri alur CS Anda sekarang dan menentukan jenis percakapan mana yang perlu dipisahkan.',
+  },
+  {
+    title: 'Agent dilatih',
+    body: 'Seperti Basic: pengetahuan produk, harga, dan SOP Anda dimasukkan, lalu gaya bahasanya disetel.',
+  },
+  {
+    title: 'Kategori & database disiapkan',
+    body: 'Kami tentukan kategori pelanggan bersama Anda dan menyambungkannya ke Google Sheets milik Anda.',
+  },
+  {
+    title: 'Jalur eskalasi disepakati',
+    body: 'Ditetapkan kondisi apa yang harus dilempar ke manusia dan ke alamat email siapa notifikasinya masuk.',
+  },
+  {
+    title: 'Uji coba bersama',
+    body: 'Anda menguji percakapan sekaligus memastikan data yang tercatat dan eskalasinya benar-benar berjalan.',
+  },
+  {
+    title: 'Tayang, dipantau & dirawat',
+    body: 'Agent melayani pelanggan; analitiknya kita baca berkala untuk memperbaiki jawaban yang masih sering meleset.',
+  },
+];
+---
+
+<section
+  id="business"
+  class="border-b border-line bg-surface-soft scroll-mt-8"
+  aria-labelledby="paket-business"
+>
+  <div class="mx-auto max-w-5xl px-6 py-16 sm:py-20">
+    <p class="text-sm font-semibold tracking-wide text-primary uppercase">
+      Paket 02
+    </p>
+    <h2 id="paket-business" class="mt-3 text-2xl font-bold text-ink sm:text-3xl">
+      Paket Business
+    </h2>
+    <p class="mt-4 max-w-prose text-ink-soft">
+      Untuk bisnis yang percakapannya sudah cukup ramai sehingga bukan cuma
+      butuh dibalas cepat, tapi juga butuh tahu siapa yang bertanya dan kapan
+      manusia harus turun tangan.
+    </p>
+
+    <h3 class="mt-10 text-lg font-semibold text-ink">
+      Semua fitur Paket Basic, plus:
+    </h3>
+    <p class="mt-3 max-w-prose text-sm text-ink-soft">
+      Respon otomatis 24/7, pengetahuan produk, memori percakapan, dan pelatihan
+      sesuai SOP tetap termasuk — rinciannya ada di <a
+        href="#basic"
+        class="font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary-dark"
+        >bagian Paket Basic</a
+      >.
+    </p>
+
+    <ul class="mt-6 grid gap-6 sm:grid-cols-2">
+      {
+        fitur.map((item) => (
+          <li class="rounded-2xl border border-line bg-surface p-6">
+            <span
+              class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-5 w-5 text-primary"
+              >
+                <path d="M4 10.5 8 14.5 16 6" />
+              </svg>
+            </span>
+            <h4 class="mt-4 text-base font-semibold text-ink">{item.title}</h4>
+            <p class="mt-2 text-sm text-ink-soft">{item.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h3 class="mt-12 text-lg font-semibold text-ink">
+      Cara Kerja Paket Business
+    </h3>
+    <ol class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        caraKerja.map((step, index) => (
+          <li class="rounded-2xl border border-line bg-surface p-6">
+            <span class="text-sm font-bold text-primary">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <h4 class="mt-3 text-base font-semibold text-ink">{step.title}</h4>
+            <p class="mt-2 text-sm text-ink-soft">{step.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="mt-10">
+      <a
+        href={whatsappLink(
+          'Halo Haitham Tech, saya ingin bertanya tentang Paket Business.'
+        )}
+        rel="noopener"
+        class="inline-block rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+      >
+        Tanya Paket Ini
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,23 +1,67 @@
 ---
-// Placeholder — isi sesungguhnya dibangun di sesi tersendiri (SPEC §5.2).
-// Halaman ini sudah ada sekarang agar navigasi Header/Footer tidak menunjuk
-// ke link mati (gerbang `npm run linkcheck`).
+/**
+ * Halaman Layanan (SPEC §5.2) — disusun dari section modular di src/sections/.
+ *
+ * JSON-LD `Service` per paket disuntik lewat slot "head" BaseLayout (SPEC §8).
+ * Sengaja TANPA `offers`/`price`: harga paket belum ditetapkan, dan JSON-LD
+ * adalah klaim terstruktur ke mesin pencari — mengisinya dengan angka karangan
+ * melanggar SPEC §2.8. Saat harga sudah ada, tambahkan `offers` di sini.
+ */
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { whatsappLink, WHATSAPP_CTA_LABEL } from '../consts';
+import LayananHero from '../sections/LayananHero.astro';
+import PaketBasic from '../sections/PaketBasic.astro';
+import PaketBusiness from '../sections/PaketBusiness.astro';
+import ClosingCTA from '../sections/ClosingCTA.astro';
+import { SITE_NAME, SITE_URL, AREA_SERVED } from '../consts';
+
+const provider = {
+  '@type': 'ProfessionalService',
+  name: SITE_NAME,
+  url: SITE_URL,
+};
+
+const services = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Paket Basic — AI Customer Service Agent',
+    serviceType: 'AI Customer Service Agent',
+    description:
+      'Agent AI yang membalas pertanyaan pelanggan secara otomatis 24/7, dilatih dari informasi produk, jasa, dan SOP layanan pelanggan Anda.',
+    url: `${SITE_URL}/layanan#basic`,
+    provider,
+    areaServed: AREA_SERVED,
+    availableLanguage: 'id',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Paket Business — AI Customer Service Agent',
+    serviceType: 'AI Customer Service Agent',
+    description:
+      'Seluruh kemampuan Paket Basic ditambah kategorisasi pelanggan otomatis, database pelanggan terstruktur di Google Sheets, analitik dasar, dan eskalasi cerdas ke CS manusia via email.',
+    url: `${SITE_URL}/layanan#business`,
+    provider,
+    areaServed: AREA_SERVED,
+    availableLanguage: 'id',
+  },
+];
 ---
 
-<BaseLayout title="Layanan" description="Paket AI Customer Service Agent dari Haitham Tech: Basic untuk usaha rintisan dan Business dengan kategorisasi pelanggan, analitik, serta eskalasi ke CS manusia.">
-  <div class="mx-auto max-w-2xl px-6 py-24">
-    <h1 class="text-3xl font-bold text-ink sm:text-4xl">Layanan</h1>
-    <p class="mt-4 text-ink-soft">Rincian paket Basic dan Business sedang kami siapkan. Sementara ini, silakan tanyakan langsung kebutuhan Anda lewat WhatsApp — kami bantu pilihkan paket yang paling pas.</p>
-    <p class="mt-8">
-      <a
-        href={whatsappLink()}
-        rel="noopener"
-        class="inline-block rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
-      >
-        {WHATSAPP_CTA_LABEL}
-      </a>
-    </p>
-  </div>
+<BaseLayout
+  title="Layanan"
+  description="Paket AI Customer Service Agent dari Haitham Tech: Basic untuk usaha rintisan dan Business dengan kategorisasi pelanggan, analitik, serta eskalasi ke CS manusia."
+>
+  <Fragment slot="head">
+    {
+      services.map((service) => (
+        <script type="application/ld+json" set:html={JSON.stringify(service)} />
+      ))
+    }
+  </Fragment>
+
+  <LayananHero />
+  <PaketBasic />
+  <PaketBusiness />
+  <ClosingCTA />
 </BaseLayout>

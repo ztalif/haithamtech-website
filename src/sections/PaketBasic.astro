@@ -1,0 +1,121 @@
+---
+/**
+ * Paket Basic (SPEC §5.2) — anchor #basic.
+ *
+ * Daftar fiturnya dipatok persis empat butir yang tertulis di SPEC; jangan
+ * menambah fitur yang tidak ada di sana, karena halaman ini adalah janji
+ * produk, bukan bahan promosi bebas.
+ * CTA memakai pesan pra-isi khusus paket supaya obrolan WhatsApp yang masuk
+ * sudah membawa konteks paket yang ditanyakan.
+ */
+import { whatsappLink } from '../consts';
+
+const fitur = [
+  {
+    title: 'Respon Otomatis 24/7',
+    body: 'Pesan pelanggan dibalas seketika kapan pun masuk, termasuk di luar jam kerja dan akhir pekan.',
+  },
+  {
+    title: 'Pengetahuan Produk & Jasa',
+    body: 'Agent menjawab dari katalog, daftar harga, dan ketentuan layanan Anda sendiri.',
+  },
+  {
+    title: 'Memori Percakapan Dasar',
+    body: 'Agent mengikuti alur obrolan yang sedang berjalan, jadi pelanggan tidak perlu mengulang dari awal.',
+  },
+  {
+    title: 'Pelatihan Dasar sesuai SOP',
+    body: 'Cara menjawab, batasan, dan gaya bahasa agent disetel mengikuti SOP layanan pelanggan Anda.',
+  },
+];
+
+const caraKerja = [
+  {
+    title: 'Kumpulkan bahan',
+    body: 'Anda menyerahkan informasi produk, harga, dan SOP menjawab yang selama ini dipakai tim.',
+  },
+  {
+    title: 'Agent dilatih',
+    body: 'Kami susun bahan itu jadi pengetahuan agent dan menyetel gaya bahasanya agar terdengar seperti bisnis Anda.',
+  },
+  {
+    title: 'Uji coba bersama',
+    body: 'Anda mencoba sendiri percakapannya; jawaban yang belum pas kami perbaiki sebelum tayang.',
+  },
+  {
+    title: 'Tayang & dirawat',
+    body: 'Agent mulai melayani pelanggan, dan jawabannya diperbarui saat produk atau ketentuan Anda berubah.',
+  },
+];
+---
+
+<section id="basic" class="border-b border-line bg-surface scroll-mt-8" aria-labelledby="paket-basic">
+  <div class="mx-auto max-w-5xl px-6 py-16 sm:py-20">
+    <p class="text-sm font-semibold tracking-wide text-primary uppercase">
+      Paket 01
+    </p>
+    <h2 id="paket-basic" class="mt-3 text-2xl font-bold text-ink sm:text-3xl">
+      Paket Basic
+    </h2>
+    <p class="mt-4 max-w-prose text-ink-soft">
+      Ideal untuk usaha rintisan dan UMKM yang pertanyaan masuknya berulang dan
+      mulai memakan waktu tim. Fokusnya satu: pelanggan tidak lagi menunggu
+      dibalas.
+    </p>
+
+    <h3 class="mt-10 text-lg font-semibold text-ink">Yang Anda dapatkan</h3>
+    <ul class="mt-6 grid gap-6 sm:grid-cols-2">
+      {
+        fitur.map((item) => (
+          <li class="rounded-2xl border border-line bg-surface-soft p-6">
+            <span
+              class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-5 w-5 text-primary"
+              >
+                <path d="M4 10.5 8 14.5 16 6" />
+              </svg>
+            </span>
+            <h4 class="mt-4 text-base font-semibold text-ink">{item.title}</h4>
+            <p class="mt-2 text-sm text-ink-soft">{item.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h3 class="mt-12 text-lg font-semibold text-ink">Cara Kerja Paket Basic</h3>
+    <ol class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        caraKerja.map((step, index) => (
+          <li class="rounded-2xl border border-line bg-surface-soft p-6">
+            <span class="text-sm font-bold text-primary">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <h4 class="mt-3 text-base font-semibold text-ink">{step.title}</h4>
+            <p class="mt-2 text-sm text-ink-soft">{step.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="mt-10">
+      <a
+        href={whatsappLink(
+          'Halo Haitham Tech, saya ingin bertanya tentang Paket Basic.'
+        )}
+        rel="noopener"
+        class="inline-block rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+      >
+        Tanya Paket Ini
+      </a>
+    </div>
+  </div>
+</section>
