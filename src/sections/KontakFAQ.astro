@@ -1,0 +1,49 @@
+---
+/**
+ * FAQ singkat halaman Kontak (SPEC §5.5).
+ *
+ * Daftar pertanyaannya diterima sebagai prop dari `kontak.astro`, karena
+ * halaman itu juga memakainya untuk membangun JSON-LD `FAQPage` (SPEC §8).
+ * Satu sumber data untuk dua keluaran — supaya yang terbaca pengunjung dan
+ * yang dibaca mesin pencari tidak mungkin berbeda.
+ *
+ * Jawaban ditulis polos tanpa markup agar bisa dipakai apa adanya di JSON-LD.
+ */
+export interface FaqItem {
+  pertanyaan: string;
+  jawaban: string;
+}
+
+interface Props {
+  faq: readonly FaqItem[];
+}
+
+const { faq } = Astro.props;
+---
+
+<section class="bg-surface-soft" aria-labelledby="kontak-faq">
+  <div class="mx-auto max-w-5xl px-6 py-16 sm:py-20">
+    <h2 id="kontak-faq" class="text-2xl font-bold text-ink sm:text-3xl">
+      Pertanyaan yang sering masuk
+    </h2>
+
+    <dl class="mt-8 grid gap-6 sm:grid-cols-2">
+      {
+        faq.map((item) => (
+          <div class="rounded-2xl border border-line bg-surface p-6">
+            <dt class="text-base font-semibold text-ink">{item.pertanyaan}</dt>
+            <dd class="mt-3 text-sm text-ink-soft">{item.jawaban}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <p class="mt-8 max-w-prose text-sm text-ink-soft">
+      Rincian lengkap tiap paket, termasuk alur kerjanya, ada di{' '}
+      <a href="/layanan" class="font-semibold text-primary hover:text-primary-dark">
+        halaman Layanan
+      </a>
+      .
+    </p>
+  </div>
+</section>
