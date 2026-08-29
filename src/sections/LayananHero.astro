@@ -1,0 +1,49 @@
+---
+/**
+ * Pembuka halaman Layanan (SPEC §5.2).
+ *
+ * Menampung satu-satunya <h1> halaman (SPEC §8) dan dua tautan lompat ke
+ * anchor paket, supaya pengunjung yang sudah tahu maunya tidak perlu
+ * menggulir melewati paket yang tidak ia cari.
+ */
+---
+
+<section class="border-b border-line bg-surface-soft" aria-labelledby="layanan-judul">
+  <div class="mx-auto max-w-5xl px-6 py-16 sm:py-20">
+    <p class="text-sm font-semibold tracking-wide text-primary uppercase">
+      Paket layanan
+    </p>
+    <h1
+      id="layanan-judul"
+      class="mt-3 max-w-3xl text-3xl leading-tight font-bold text-balance text-ink sm:text-4xl"
+    >
+      Dua paket AI Customer Service Agent, dipilih sesuai beban CS Anda
+    </h1>
+    <p class="mt-5 max-w-prose text-base text-ink-soft sm:text-lg">
+      Paket <strong class="font-semibold text-ink">Basic</strong> untuk usaha
+      rintisan dan UMKM yang ingin pertanyaan berulang berhenti menumpuk. Paket
+      <strong class="font-semibold text-ink">Business</strong> untuk bisnis yang
+      sudah butuh data pelanggan tertata dan jalur eskalasi ke tim manusia.
+    </p>
+
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a
+        href="#basic"
+        class="inline-block rounded-full border border-line bg-surface px-5 py-3 text-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
+      >
+        Lihat Paket Basic
+      </a>
+      <a
+        href="#business"
+        class="inline-block rounded-full border border-line bg-surface px-5 py-3 text-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
+      >
+        Lihat Paket Business
+      </a>
+    </div>
+
+    <p class="mt-6 max-w-prose text-sm text-ink-soft">
+      Cakupan tiap paket disesuaikan dengan SOP dan jenis pertanyaan yang masuk
+      ke bisnis Anda, jadi rinciannya kami bahas dulu lewat obrolan.
+    </p>
+  </div>
+</section>
