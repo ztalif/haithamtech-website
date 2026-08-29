@@ -1,0 +1,110 @@
+---
+/**
+ * Saluran kontak: tombol WhatsApp besar (CTA utama), email, dan jam
+ * operasional / perkiraan waktu respons (SPEC §5.5).
+ *
+ * PENTING: halaman Kontak adalah tujuan akhir seluruh CTA situs. Selama
+ * WHATSAPP_NUMBER kosong, `whatsappLink()` jatuh ke '/kontak' — kalau dipakai
+ * di sini hasilnya tautan ke halaman ini sendiri. Karena itu tiap saluran
+ * hanya dirender di balik flag HAS_*, dan `whatsappLink()` cuma dipanggil
+ * ketika nomornya benar-benar ada. Yang belum ada datanya dinyatakan apa
+ * adanya, bukan diisi nilai karangan (SPEC §2.8 & §12).
+ */
+import {
+  whatsappLink,
+  MAILTO_LINK,
+  CONTACT_EMAIL,
+  OPERATING_HOURS,
+  HAS_WHATSAPP,
+  HAS_EMAIL,
+  HAS_OPERATING_HOURS,
+} from '../consts';
+
+const adaSaluran = HAS_WHATSAPP || HAS_EMAIL;
+---
+
+<section class="border-b border-line bg-surface" aria-labelledby="kontak-saluran">
+  <div class="mx-auto max-w-5xl px-6 py-16 sm:py-20">
+    <h2 id="kontak-saluran" class="text-2xl font-bold text-ink sm:text-3xl">
+      Cara menghubungi kami
+    </h2>
+
+    {
+      HAS_WHATSAPP && (
+        <div class="mt-8">
+          <a
+            href={whatsappLink()}
+            rel="noopener"
+            class="inline-flex items-center gap-3 rounded-full bg-primary px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-primary-dark"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="h-5 w-5"
+              aria-hidden="true"
+            >
+              <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.8 14.06c-.25.69-1.45 1.32-1.99 1.37-.53.05-1.03.24-3.47-.72-2.92-1.15-4.78-4.13-4.92-4.32-.14-.19-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.27-.29.58-.36.78-.36h.56c.18 0 .42-.07.66.5.25.6.84 2.06.91 2.21.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.14-.3.3-.13.59.17.29.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.46.29.15.46.12.63-.07.17-.19.73-.85.92-1.14.19-.29.39-.24.65-.15.26.1 1.66.78 1.94.93.29.14.48.22.55.34.07.12.07.7-.18 1.39Z" />
+            </svg>
+            Konsultasi Gratis via WhatsApp
+          </a>
+          <p class="mt-3 text-sm text-ink-soft">
+            Jalur tercepat. Pesan pembuka sudah kami siapkan, tinggal Anda kirim.
+          </p>
+        </div>
+      )
+    }
+
+    {
+      !adaSaluran && (
+        <div class="mt-8 rounded-2xl border border-line bg-surface-soft px-6 py-6">
+          <p class="text-ink-soft">
+            Nomor WhatsApp dan email resmi kami sedang disiapkan, dan akan tayang
+            di halaman ini begitu aktif.
+          </p>
+          <p class="mt-4 text-sm text-ink-soft">
+            Sementara itu, rincian tiap paket bisa Anda baca lebih dulu di{' '}
+            <a
+              href="/layanan"
+              class="font-semibold text-primary hover:text-primary-dark"
+            >
+              halaman Layanan
+            </a>
+            .
+          </p>
+        </div>
+      )
+    }
+
+    {
+      (HAS_EMAIL || HAS_OPERATING_HOURS) && (
+        <dl class="mt-10 grid gap-6 sm:grid-cols-2">
+          {HAS_EMAIL && (
+            <div class="rounded-2xl border border-line bg-surface-soft p-6">
+              <dt class="text-sm font-semibold text-ink">Email</dt>
+              <dd class="mt-2 text-sm text-ink-soft">
+                <a
+                  href={MAILTO_LINK}
+                  class="font-semibold text-primary hover:text-primary-dark"
+                >
+                  {CONTACT_EMAIL}
+                </a>
+                <span class="mt-2 block">
+                  Cocok untuk pertanyaan panjang atau bila Anda perlu melampirkan
+                  dokumen SOP.
+                </span>
+              </dd>
+            </div>
+          )}
+          {HAS_OPERATING_HOURS && (
+            <div class="rounded-2xl border border-line bg-surface-soft p-6">
+              <dt class="text-sm font-semibold text-ink">
+                Jam operasional & waktu respons
+              </dt>
+              <dd class="mt-2 text-sm text-ink-soft">{OPERATING_HOURS}</dd>
+            </div>
+          )}
+        </dl>
+      )
+    }
+  </div>
+</section>

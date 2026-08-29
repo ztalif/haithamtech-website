@@ -1,55 +1,65 @@
 ---
-// Placeholder — isi sesungguhnya dibangun di sesi tersendiri (SPEC §5.5).
-// Halaman ini sudah ada sekarang agar navigasi Header/Footer tidak menunjuk
-// ke link mati (gerbang `npm run linkcheck`).
+/**
+ * Halaman Kontak (SPEC §5.5) — disusun dari section modular di src/sections/.
+ *
+ * JSON-LD `FAQPage` disuntik lewat slot "head" BaseLayout (SPEC §8), dibangun
+ * dari array `faq` yang sama dengan yang dirender KontakFAQ — jadi teks di
+ * halaman dan klaim ke mesin pencari tidak bisa berbeda.
+ *
+ * Halaman ini TIDAK memakai ClosingCTA: tombolnya memanggil `whatsappLink()`,
+ * yang selama WHATSAPP_NUMBER kosong jatuh ke '/kontak' — yaitu halaman ini
+ * sendiri.
+ *
+ * Jawaban FAQ hanya menyatakan hal yang sudah tertulis di SPEC/halaman
+ * Layanan, ditambah estimasi durasi setup yang diberikan langsung oleh
+ * pemilik bisnis. Tidak ada janji baru yang dikarang di sini (SPEC §2.8).
+ */
 import BaseLayout from '../layouts/BaseLayout.astro';
-import {
-  whatsappLink,
-  MAILTO_LINK,
-  CONTACT_EMAIL,
-  OPERATING_HOURS,
-  HAS_WHATSAPP,
-  HAS_EMAIL,
-  HAS_OPERATING_HOURS,
-} from '../consts';
+import KontakHero from '../sections/KontakHero.astro';
+import KontakSaluran from '../sections/KontakSaluran.astro';
+import KontakFAQ, { type FaqItem } from '../sections/KontakFAQ.astro';
+
+const faq: readonly FaqItem[] = [
+  {
+    pertanyaan: 'Berapa lama setup sampai agent bisa dipakai?',
+    jawaban:
+      'Umumnya 7–10 hari kerja sejak bahan lengkap kami terima. Lamanya bergantung pada kesiapan informasi produk, harga, dan SOP menjawab yang Anda serahkan, karena tahap uji coba bersama baru berjalan setelah agent dilatih dari bahan tersebut.',
+  },
+  {
+    pertanyaan: 'Apakah agent bisa disesuaikan dengan SOP kami?',
+    jawaban:
+      'Bisa, dan itu bagian dari paket sejak Basic. Cara menjawab, batasan, serta gaya bahasa agent disetel mengikuti SOP layanan pelanggan Anda, dan pengetahuannya diambil dari katalog, daftar harga, serta ketentuan layanan Anda sendiri.',
+  },
+  {
+    pertanyaan: 'Kalau agent tidak sanggup menjawab, apakah pelanggan tetap dilayani manusia?',
+    jawaban:
+      'Ya. Paket Business menyediakan Eskalasi Cerdas, yaitu hand-off percakapan ke CS manusia lewat email ketika pertanyaan sudah di luar jangkauan agent, sehingga pelanggan tidak berhenti di jalan buntu.',
+  },
+];
+
+const faqPage = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((item) => ({
+    '@type': 'Question',
+    name: item.pertanyaan,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.jawaban,
+    },
+  })),
+};
 ---
 
-<BaseLayout title="Kontak" description="Hubungi Haitham Tech lewat WhatsApp atau email untuk konsultasi gratis seputar AI Customer Service Agent bagi bisnis Anda.">
-  <div class="mx-auto max-w-2xl px-6 py-24">
-    <h1 class="text-3xl font-bold text-ink sm:text-4xl">Kontak</h1>
-    <p class="mt-4 text-ink-soft">Cara tercepat menghubungi kami adalah lewat WhatsApp. FAQ dan detail jam operasional akan ditambahkan di halaman ini.</p>
+<BaseLayout
+  title="Kontak"
+  description="Hubungi Haitham Tech untuk konsultasi gratis seputar AI Customer Service Agent, dan baca jawaban atas pertanyaan yang paling sering masuk sebelum mengobrol."
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(faqPage)} />
+  </Fragment>
 
-    {/* Halaman ini adalah tujuan akhir CTA, jadi tidak boleh menautkan ke dirinya
-        sendiri saat kontak belum diisi — tampilkan keadaan sebenarnya. */}
-    {
-      HAS_WHATSAPP ? (
-        <p class="mt-8">
-          <a
-            href={whatsappLink()}
-            rel="noopener"
-            class="inline-block rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
-          >
-            Konsultasi Gratis via WhatsApp
-          </a>
-        </p>
-      ) : (
-        <p class="mt-8 rounded-xl border border-line bg-surface-soft px-5 py-4 text-sm text-ink-soft">
-          Nomor WhatsApp resmi kami sedang disiapkan dan akan tayang di sini
-          begitu aktif.
-        </p>
-      )
-    }
-
-    {
-      HAS_EMAIL && (
-        <p class="mt-4 text-sm text-ink-soft">
-          Email:{' '}
-          <a href={MAILTO_LINK} class="text-primary hover:text-primary-dark">
-            {CONTACT_EMAIL}
-          </a>
-        </p>
-      )
-    }
-    {HAS_OPERATING_HOURS && <p class="mt-2 text-sm text-ink-soft">{OPERATING_HOURS}</p>}
-  </div>
+  <KontakHero />
+  <KontakSaluran />
+  <KontakFAQ faq={faq} />
 </BaseLayout>
