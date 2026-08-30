@@ -1,0 +1,98 @@
+---
+/**
+ * Halaman 404 (SPEC §5.6).
+ *
+ * Tujuannya bukan mengumumkan kesalahan, tapi menjaga jalur konversi:
+ * pengunjung yang tersesat tetap punya CTA dan tautan ke halaman yang paling
+ * mungkin ia cari.
+ *
+ * WAJIB `noindex` — prop BaseLayout yang sudah ada, jangan bikin mekanisme
+ * baru. Halaman ini juga disajikan Caddy lewat `handle_errors` (SPEC §10),
+ * jadi isinya harus berdiri sendiri di URL mana pun.
+ *
+ * Sengaja SATU file, tanpa section terpisah: isinya satu blok utuh dan hanya
+ * dipakai di sini. Presedennya sama dengan tentang.astro.
+ *
+ * Tautan internal ditulis relatif — link absolut ke domain sendiri ikut
+ * ter-skip `npm run linkcheck` dan lolos dari gerbang (lihat decisions.md).
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { whatsappLink, WHATSAPP_CTA_LABEL } from '../consts';
+
+const tujuan = [
+  {
+    href: '/layanan',
+    judul: 'Layanan',
+    ringkas: 'Rincian paket Basic & Business, lengkap dengan cara kerjanya.',
+  },
+  {
+    href: '/artikel',
+    judul: 'Artikel',
+    ringkas: 'Bacaan seputar otomatisasi customer service untuk bisnis Indonesia.',
+  },
+  {
+    href: '/kontak',
+    judul: 'Kontak',
+    ringkas: 'Cara menghubungi kami dan jawaban atas pertanyaan yang sering masuk.',
+  },
+];
+---
+
+<BaseLayout
+  title="Halaman Tidak Ditemukan"
+  description="Halaman yang Anda cari tidak ada di alamat ini. Kembali ke beranda atau lanjut ke halaman Layanan, Artikel, dan Kontak Haitham Tech."
+  noindex
+>
+  <section class="bg-surface" aria-labelledby="empat-nol-empat">
+    <div class="mx-auto max-w-3xl px-6 py-20 sm:py-28">
+      <p class="text-sm font-semibold tracking-wide text-primary uppercase">
+        Error 404
+      </p>
+      <h1
+        id="empat-nol-empat"
+        class="mt-3 text-3xl leading-tight font-bold text-balance text-ink sm:text-4xl"
+      >
+        Halamannya tidak ada di alamat ini
+      </h1>
+      <p class="mt-5 max-w-prose text-base text-ink-soft sm:text-lg">
+        Mungkin tautannya salah ketik, atau halamannya sudah kami pindahkan.
+        Tidak apa-apa — di bawah ini ada jalan kembali.
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href={whatsappLink()}
+          rel="noopener"
+          class="inline-block rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+        >
+          {WHATSAPP_CTA_LABEL}
+        </a>
+        <a
+          href="/"
+          class="inline-block rounded-full border border-line bg-surface px-6 py-3 text-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
+        >
+          Kembali ke Beranda
+        </a>
+      </div>
+
+      <h2 class="mt-14 text-lg font-bold text-ink">
+        Mungkin ini yang Anda cari
+      </h2>
+      <ul class="mt-5 grid gap-4">
+        {
+          tujuan.map((item) => (
+            <li class="rounded-2xl border border-line bg-surface-soft p-6">
+              <a
+                href={item.href}
+                class="text-base font-semibold text-primary hover:text-primary-dark"
+              >
+                {item.judul}
+              </a>
+              <p class="mt-2 text-sm text-ink-soft">{item.ringkas}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
