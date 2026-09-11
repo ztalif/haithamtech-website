@@ -91,3 +91,17 @@ export const DEFAULT_OG_IMAGE = '/og-image.png';
 
 /** Cakupan layanan untuk JSON-LD ProfessionalService. */
 export const AREA_SERVED = 'Indonesia';
+
+/**
+ * Detail halaman Tentang (SPEC §5.4 & §12). Dikosongkan dengan sengaja —
+ * halaman menampilkan pengakuan jujur selama belum diisi, bukan nama karangan.
+ * Poin §13 "Semua halaman ada" baru boleh dicentang setelah keduanya terisi.
+ */
+
+/** TODO: isi nama orang di balik Haitham Tech. */
+export const FOUNDER_NAME = '';
+
+/** TODO: isi 2–4 kalimat cerita pribadi: latar belakang & kenapa membangun Haitham Tech. */
+export const FOUNDER_STORY = '';
+
+export const HAS_FOUNDER = FOUNDER_NAME !== '' && FOUNDER_STORY !== '';

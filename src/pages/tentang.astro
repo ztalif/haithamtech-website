@@ -1,23 +1,22 @@
 ---
-// Placeholder — isi sesungguhnya dibangun di sesi tersendiri (SPEC §5.4).
-// Halaman ini sudah ada sekarang agar navigasi Header/Footer tidak menunjuk
-// ke link mati (gerbang `npm run linkcheck`).
+/**
+ * Halaman Tentang (SPEC §5.4) — disusun dari section modular di src/sections/.
+ *
+ * Detail pribadi (nama & cerita pendiri) dibaca dari FOUNDER_* di consts.ts
+ * dan baru tampil setelah diisi. Tidak ada JSON-LD tambahan: `ProfessionalService`
+ * sudah disuntik BaseLayout di semua halaman (SPEC §8).
+ */
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { whatsappLink, WHATSAPP_CTA_LABEL } from '../consts';
+import TentangHero from '../sections/TentangHero.astro';
+import TentangCerita from '../sections/TentangCerita.astro';
+import ClosingCTA from '../sections/ClosingCTA.astro';
 ---
 
-<BaseLayout title="Tentang" description="Mengenal Haitham Tech — siapa di balik layanan AI Customer Service Agent untuk bisnis Indonesia dan apa misinya.">
-  <div class="mx-auto max-w-2xl px-6 py-24">
-    <h1 class="text-3xl font-bold text-ink sm:text-4xl">Tentang</h1>
-    <p class="mt-4 text-ink-soft">Halaman ini sedang kami tulis. Singkatnya: Haitham Tech membantu bisnis Indonesia mengotomatiskan layanan pelanggan tanpa kehilangan sentuhan manusia.</p>
-    <p class="mt-8">
-      <a
-        href={whatsappLink()}
-        rel="noopener"
-        class="inline-block rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
-      >
-        {WHATSAPP_CTA_LABEL}
-      </a>
-    </p>
-  </div>
+<BaseLayout
+  title="Tentang"
+  description="Mengenal Haitham Tech — siapa di balik layanan AI Customer Service Agent untuk bisnis Indonesia, misinya, dan cara kami bekerja."
+>
+  <TentangHero />
+  <TentangCerita />
+  <ClosingCTA />
 </BaseLayout>
