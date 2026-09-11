@@ -1,0 +1,100 @@
+---
+/**
+ * Isi halaman Tentang (SPEC §5.4): siapa di balik layanan, misi, dan apa yang
+ * membuat tepercaya. Ringkas & personal, bukan biografi.
+ *
+ * Bagian "siapa di balik layanan" dirender dari FOUNDER_* di balik flag
+ * HAS_FOUNDER. Selama kosong, halaman menyatakannya apa adanya — tidak ada
+ * nama, gelar, atau pengalaman yang dikarang (SPEC §2.8 & §12).
+ *
+ * Paragraf "apa yang membuat berbeda" hanya mengulang hal yang sudah
+ * dijanjikan di halaman Layanan & Kontak; tidak ada klaim baru di sini.
+ */
+import { FOUNDER_NAME, FOUNDER_STORY, HAS_FOUNDER } from '../consts';
+---
+
+<section class="border-b border-line bg-surface" aria-labelledby="tentang-siapa">
+  <div class="mx-auto max-w-5xl space-y-16 px-6 py-16 sm:py-20">
+    <div class="grid gap-6 md:grid-cols-[14rem_1fr] md:gap-12">
+      <h2 id="tentang-siapa" class="text-2xl font-bold text-ink sm:text-3xl">
+        Siapa di balik layanan ini
+      </h2>
+      {
+        HAS_FOUNDER ? (
+          <div class="max-w-prose space-y-4 text-ink-soft">
+            <p>
+              <span class="font-semibold text-ink">{FOUNDER_NAME}</span>
+              {' '}— pendiri Haitham Tech.
+            </p>
+            <p>{FOUNDER_STORY}</p>
+          </div>
+        ) : (
+          <div class="max-w-prose rounded-2xl border border-line bg-surface-soft px-6 py-6 text-ink-soft">
+            <p>
+              Profil pendiri sedang kami siapkan dan akan tayang di sini. Untuk
+              sekarang, yang lebih penting Anda tahu adalah bagaimana kami
+              bekerja — dua bagian di bawah ini.
+            </p>
+          </div>
+        )
+      }
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-[14rem_1fr] md:gap-12">
+      <h2 id="tentang-misi" class="text-2xl font-bold text-ink sm:text-3xl">
+        Misi kami
+      </h2>
+      <div class="max-w-prose space-y-4 text-ink-soft">
+        <p>
+          Banyak bisnis di Indonesia kehilangan pelanggan bukan karena produknya
+          kurang, tapi karena chat dibalas terlambat — di luar jam kerja, saat
+          pesan menumpuk, atau saat satu orang harus mengurus segalanya.
+        </p>
+        <p>
+          Kami ingin otomatisasi layanan pelanggan bisa dipakai bisnis kecil dan
+          menengah tanpa tim IT: agent yang menjawab 24/7 dengan pengetahuan
+          produk Anda sendiri, dan menyerahkan percakapan ke manusia ketika
+          memang itu yang dibutuhkan.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-[14rem_1fr] md:gap-12">
+      <h2 id="tentang-beda" class="text-2xl font-bold text-ink sm:text-3xl">
+        Cara kami bekerja
+      </h2>
+      <ul class="max-w-prose space-y-5 text-ink-soft">
+        <li>
+          <p class="font-semibold text-ink">Hanya satu hal, dikerjakan sungguh-sungguh</p>
+          <p class="mt-1">
+            Kami bukan agensi serba-bisa. Seluruh layanan berputar pada AI
+            customer service, jadi setiap keputusan kami dibuat untuk masalah
+            yang itu-itu juga: pelanggan Anda terjawab dengan benar dan cepat.
+          </p>
+        </li>
+        <li>
+          <p class="font-semibold text-ink">Dilatih dari bahan bisnis Anda sendiri</p>
+          <p class="mt-1">
+            Pengetahuan agent diambil dari katalog, daftar harga, dan SOP Anda —
+            bukan dari asumsi kami. Cara menjawab dan batasannya mengikuti
+            kebiasaan bisnis Anda.
+          </p>
+        </li>
+        <li>
+          <p class="font-semibold text-ink">Manusia tetap di kursi kemudi</p>
+          <p class="mt-1">
+            Agent dirancang untuk tahu batasnya. Pertanyaan yang di luar
+            jangkauan dialihkan ke CS manusia, bukan dijawab sekenanya.
+          </p>
+        </li>
+        <li>
+          <p class="font-semibold text-ink">Terus terang sejak obrolan pertama</p>
+          <p class="mt-1">
+            Konsultasi awal gratis dan tidak mengikat. Kalau ternyata bisnis
+            Anda belum perlu AI agent, kami akan bilang apa adanya.
+          </p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
