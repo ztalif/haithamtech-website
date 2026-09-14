@@ -1,0 +1,30 @@
+# docker-compose.yml — VPS Haitham Tech (SPEC §10)
+# Hanya Caddy. Tidak ada database/analytics di VPS (decisions.md: analytics via Cloudflare cloud).
+#
+# Tata letak di VPS (contoh):
+#   /srv/haithamtech/
+#   ├── docker-compose.yml   ← file ini
+#   ├── Caddyfile
+#   └── site/                ← DEPLOY_PATH (leaf!) — target rsync --delete dari deploy.yml
+#
+# PAGAR: DEPLOY_PATH harus menunjuk ./site, BUKAN parent-nya. Apa pun di dalam
+# DEPLOY_PATH bisa terhapus oleh --delete. Sertifikat hidup di named volume, di luar path itu.
+# Setup pertama: jalankan rsync dengan --dry-run sekali untuk memastikan target benar.
+
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./site:/srv/site:ro
+      - caddy_data:/data     # sertifikat Let's Encrypt
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
