@@ -45,6 +45,7 @@ Berlaku sama untuk sesi dari laptop maupun dari HP (Claude Code on the web). Seb
 ### Aturan non-negotiable
 - Sesi dimulai dari working directory bersih (commit/stash dulu).
 - Sebelum menyusun daftar "apa yang bisa dikerjakan": cek checklist SPEC §13 **dan baca isi file** yang relevan. Nama file yang ada ≠ pekerjaannya sudah selesai.
+- Arah sebaliknya juga berlaku: kotak §13 kosong ≠ belum dikerjakan. Cukup `ls src/pages src/sections public` (bukan baca isi file) untuk memastikan halaman/aset mana yang benar-benar belum ada sebelum melapor.
 - Kerjakan **satu bagian SPEC per sesi**. Task tak terkait → sesi baru.
 - **"Selesai" = `npm run build` exit 0**, bukan pernyataan agent.
 - Baca `git diff` sebelum commit — cek tidak ada yang tersentuh di luar niat.

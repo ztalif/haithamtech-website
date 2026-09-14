@@ -313,23 +313,30 @@ Kumpulkan semua di `src/consts.ts` (dan env untuk infra). AI writer memakai plac
 
 ## 13. Definition of Done (v1)
 
-> **Ini juga pelacak progres.** Centang saat kerjaannya benar-benar selesai (`npm run build` exit 0), sebagai bagian dari langkah Commit. Poin yang belum tercentang = belum dikerjakan; jangan simpulkan status dari keberadaan nama file.
+> **Ini juga pelacak progres.** Centang saat kerjaannya benar-benar selesai (`npm run build` exit 0), sebagai bagian dari langkah Commit. Jangan simpulkan status dari keberadaan nama file. **Satu kotak = satu unit kerja** — jangan gabungkan beberapa halaman/aset dalam satu kotak; kotak gabungan tidak bisa menyatakan progres parsial dan menyesatkan sesi berikutnya (lihat `decisions.md` 2026-09-14).
 
 - [x] Proyek Astro 7 + TS + Tailwind v4 (via `@tailwindcss/vite`, token di `global.css`) berjalan (`npm run dev`, `npm run build` sukses tanpa error).
 - [x] `astro.config.mjs` menyetel `site: 'https://haithamtech.com'` + `trailingSlash: 'never'`.
-- [ ] Semua halaman ada: Beranda, Layanan (2 seksi paket + cara kerja per paket), Artikel (index + template), Tentang, Kontak, **404**.
+- [x] Halaman Beranda (§5.1: Hero + chat preview, social proof, fitur, cara kerja, CTA penutup).
+- [x] Halaman Layanan (§5.2: 2 seksi paket + cara kerja per paket + CTA WhatsApp tiap seksi).
+- [x] Halaman Artikel (§5.3: index + template `[slug]`).
+- [x] Halaman Tentang (§5.4) — struktur & section selesai; isi profil pendiri dilacak di poin placeholder di bawah.
+- [x] Halaman Kontak (§5.5: WhatsApp, email, jam operasional, FAQ).
+- [x] Halaman **404** (§5.6).
 - [x] Content collection `blog` di `src/content.config.ts` (glob loader, `z.coerce.date()`) berfungsi + minimal 1–2 artikel benih `.md`.
 - [x] Setiap artikel punya `ArticleCTA`.
-- [ ] Semua persyaratan SEO Bagian 8 terpenuhi: canonical/OG **absolut**, JSON-LD `ProfessionalService`, sitemap, robots.txt.
+- [x] SEO §8: canonical & OG **absolut** dari `Astro.site`, JSON-LD `ProfessionalService` di semua halaman (+ `Service`, `BlogPosting`, `BreadcrumbList`, `FAQPage` di halaman terkait).
+- [x] SEO §8: sitemap (`@astrojs/sitemap`) + `robots.txt` menunjuk sitemap absolut.
 - [x] `npm run linkcheck` lolos tanpa link internal mati (dijaga otomatis di CI tiap PR).
 - [x] CTA WhatsApp & email berfungsi dari `consts.ts` (Header, Footer, dan tiap halaman).
 - [ ] Desain sesuai arah Bagian 7 (bersih, ramah, terang, lembut) & responsif (mobile-first).
 - [x] Workflow `deploy.yml` tersedia (build → linkcheck → rsync, dengan pagar `DEPLOY_PATH` kosong).
 - [x] `Caddyfile` tersedia (redirect www→non-www, handle 404, `try_files {path} {path}/index.html`).
 - [x] `docker-compose.yml` tersedia (Caddy saja, named volume untuk sertifikat).
-- [ ] `robots.txt`, favicon, og-image default ada.
+- [x] `public/favicon.svg` ada.
+- [ ] `public/og-image.png` default ada. **Titik buta gerbang:** `og:image` absolut ter-skip linkcheck, jadi file yang hilang tidak pernah muncul sebagai error.
 - [x] Social proof dibingkai sebagai riset (bersumber) / ilustrasi — tidak ada angka yang menyerupai hasil klien.
-- [ ] Semua placeholder terdaftar & mudah dicari; tidak ada data karangan yang menyamar sebagai fakta.
+- [ ] Semua placeholder terdaftar & mudah dicari; tidak ada data karangan yang menyamar sebagai fakta. Termasuk `FOUNDER_NAME`/`FOUNDER_STORY` untuk halaman Tentang (menunggu data user).
 
 ---
 
