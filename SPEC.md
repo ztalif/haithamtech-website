@@ -325,8 +325,8 @@ Kumpulkan semua di `src/consts.ts` (dan env untuk infra). AI writer memakai plac
 - [x] CTA WhatsApp & email berfungsi dari `consts.ts` (Header, Footer, dan tiap halaman).
 - [ ] Desain sesuai arah Bagian 7 (bersih, ramah, terang, lembut) & responsif (mobile-first).
 - [x] Workflow `deploy.yml` tersedia (build → linkcheck → rsync, dengan pagar `DEPLOY_PATH` kosong).
-- [ ] `Caddyfile` tersedia (redirect www→non-www, handle 404, `try_files {path} {path}/index.html`).
-- [ ] `docker-compose.yml` tersedia (Caddy saja, named volume untuk sertifikat).
+- [x] `Caddyfile` tersedia (redirect www→non-www, handle 404, `try_files {path} {path}/index.html`).
+- [x] `docker-compose.yml` tersedia (Caddy saja, named volume untuk sertifikat).
 - [ ] `robots.txt`, favicon, og-image default ada.
 - [x] Social proof dibingkai sebagai riset (bersumber) / ilustrasi — tidak ada angka yang menyerupai hasil klien.
 - [ ] Semua placeholder terdaftar & mudah dicari; tidak ada data karangan yang menyamar sebagai fakta.

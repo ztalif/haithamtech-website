@@ -1,0 +1,32 @@
+# Caddyfile — Haitham Tech (SPEC §10)
+# Dipakai oleh service `caddy` di docker-compose.yml. HTTPS otomatis via Let's Encrypt.
+#
+# Prasyarat sebelum pertama kali dijalankan (urutan WAJIB, lihat SPEC §10):
+#   1. A record haithamtech.com + www sudah resolve ke IP VPS.
+#   2. ufw allow 80,443/tcp
+#   3. Bila DNS di Cloudflare: mode DNS-only (grey cloud) saat sertifikat pertama terbit.
+
+# Redirect www → non-www: canonical tunggal, hindari duplicate content (SPEC §8).
+www.haithamtech.com {
+	redir https://haithamtech.com{uri} permanent
+}
+
+haithamtech.com {
+	# Isi dist/ hasil rsync dari deploy.yml (DEPLOY_PATH). Bind-mount read-only di compose.
+	root * /srv/site
+
+	encode gzip zstd
+
+	# WAJIB (decisions.md 2026-08-23): Astro meng-emit `artikel/index.html`, sementara
+	# seluruh link internal & canonical memakai `/artikel` (trailingSlash: 'never').
+	# Tanpa ini file_server menjawab 301 → `/artikel/`, dan URL tayang ≠ canonical.
+	try_files {path} {path}/index.html
+
+	file_server
+
+	# Halaman 404 on-brand (SPEC §5.6). Astro meng-emit dist/404.html sebagai file.
+	handle_errors {
+		rewrite * /404.html
+		file_server
+	}
+}
