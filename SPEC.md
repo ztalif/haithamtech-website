@@ -334,7 +334,7 @@ Kumpulkan semua di `src/consts.ts` (dan env untuk infra). AI writer memakai plac
 - [x] `Caddyfile` tersedia (redirect www→non-www, handle 404, `try_files {path} {path}/index.html`).
 - [x] `docker-compose.yml` tersedia (Caddy saja, named volume untuk sertifikat).
 - [x] `public/favicon.svg` ada.
-- [ ] `public/og-image.png` default ada. **Titik buta gerbang:** `og:image` absolut ter-skip linkcheck, jadi file yang hilang tidak pernah muncul sebagai error.
+- [x] `public/og-image.png` default ada. **Titik buta gerbang:** `og:image` absolut ter-skip linkcheck, jadi file yang hilang tidak pernah muncul sebagai error.
 - [x] Social proof dibingkai sebagai riset (bersumber) / ilustrasi — tidak ada angka yang menyerupai hasil klien.
 - [ ] Semua placeholder terdaftar & mudah dicari; tidak ada data karangan yang menyamar sebagai fakta. Termasuk `FOUNDER_NAME`/`FOUNDER_STORY` untuk halaman Tentang (menunggu data user).
 
