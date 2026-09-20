@@ -329,7 +329,7 @@ Kumpulkan semua di `src/consts.ts` (dan env untuk infra). AI writer memakai plac
 - [x] SEO §8: sitemap (`@astrojs/sitemap`) + `robots.txt` menunjuk sitemap absolut.
 - [x] `npm run linkcheck` lolos tanpa link internal mati (dijaga otomatis di CI tiap PR).
 - [x] CTA WhatsApp & email berfungsi dari `consts.ts` (Header, Footer, dan tiap halaman).
-- [ ] Desain sesuai arah Bagian 7 (bersih, ramah, terang, lembut) & responsif (mobile-first).
+- [x] Desain sesuai arah Bagian 7 (bersih, ramah, terang, lembut) & responsif (mobile-first).
 - [x] Workflow `deploy.yml` tersedia (build → linkcheck → rsync, dengan pagar `DEPLOY_PATH` kosong).
 - [x] `Caddyfile` tersedia (redirect www→non-www, handle 404, `try_files {path} {path}/index.html`).
 - [x] `docker-compose.yml` tersedia (Caddy saja, named volume untuk sertifikat).

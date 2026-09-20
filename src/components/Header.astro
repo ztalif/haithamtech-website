@@ -2,9 +2,10 @@
 /**
  * Header situs: wordmark + navigasi utama + CTA WhatsApp.
  *
- * Tanpa JavaScript sama sekali (SPEC §2.2). Di layar sempit navigasi turun ke
- * baris berikutnya dan membungkus — dipilih ketimbang menu hamburger karena
- * itu butuh JS/state untuk lima tautan pendek saja.
+ * Tanpa JavaScript sama sekali (SPEC §2.2). Di layar sempit: baris pertama
+ * wordmark + tombol CTA, baris kedua navigasi yang membungkus — dipilih
+ * ketimbang menu hamburger karena itu butuh JS/state untuk lima tautan pendek
+ * saja. Tiap tautan diberi padding vertikal agar area sentuhnya cukup di HP.
  */
 import { SITE_NAME, NAV_ITEMS, whatsappLink } from '../consts';
 
@@ -19,47 +20,45 @@ function isActive(href: string): boolean {
 
 <header class="border-b border-line bg-surface">
   <div
-    class="mx-auto flex max-w-5xl flex-col gap-4 px-6 py-4 sm:flex-row sm:items-center sm:justify-between"
+    class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-6 py-3 sm:flex-nowrap sm:py-4"
   >
     <a
       href="/"
-      class="text-lg font-bold tracking-tight text-ink transition-colors hover:text-primary"
+      class="py-2 text-lg font-bold tracking-tight text-ink transition-colors hover:text-primary"
     >
       Haitham<span class="text-primary">Tech</span>
       <span class="sr-only">{SITE_NAME} — beranda</span>
     </a>
 
-    <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
-      <nav aria-label="Navigasi utama">
-        <ul class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-          {
-            NAV_ITEMS.map((item) => (
-              <li>
-                <a
-                  href={item.href}
-                  aria-current={isActive(item.href) ? 'page' : undefined}
-                  class:list={[
-                    'transition-colors hover:text-primary',
-                    isActive(item.href)
-                      ? 'font-semibold text-primary'
-                      : 'text-ink-soft',
-                  ]}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
+    <a
+      href={whatsappLink()}
+      rel="noopener"
+      class="order-2 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark sm:order-3"
+    >
+      Konsultasi Gratis
+    </a>
 
-      <a
-        href={whatsappLink()}
-        rel="noopener"
-        class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
-      >
-        Konsultasi Gratis
-      </a>
-    </div>
+    <nav aria-label="Navigasi utama" class="order-3 w-full sm:order-2 sm:ml-auto sm:w-auto">
+      <ul class="-mx-2 flex flex-wrap items-center text-sm">
+        {
+          NAV_ITEMS.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                class:list={[
+                  'inline-block px-2 py-2 transition-colors hover:text-primary',
+                  isActive(item.href)
+                    ? 'font-semibold text-primary'
+                    : 'text-ink-soft',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
   </div>
 </header>

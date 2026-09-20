@@ -16,7 +16,9 @@
   --color-ink-soft: #5b686f;
   --color-line: #e3ebe9;
 
-  /* Tipografi — TODO: ganti ke Plus Jakarta Sans / Inter bila font sudah di-host lokal (SPEC §7) */
+  /* Tipografi: sengaja memakai font sistem, bukan Plus Jakarta Sans/Inter yang
+     di-host sendiri — tanpa aset font tambahan, tanpa FOUT, dan Core Web Vitals
+     tetap maksimal (alasan lengkap di decisions.md 2026-09-20). */
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, sans-serif;
 }
