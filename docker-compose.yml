@@ -1,30 +1,47 @@
 # docker-compose.yml — VPS Haitham Tech (SPEC §10)
-# Hanya Caddy. Tidak ada database/analytics di VPS (decisions.md: analytics via Cloudflare cloud).
+# Hanya Caddy untuk file statis. Tidak ada database/analytics di VPS
+# (decisions.md: analytics via Cloudflare cloud).
 #
-# Tata letak di VPS (contoh):
+# VPS ini dipakai bersama stack n8n, yang sudah memiliki Traefik di port 80/443.
+# Karena itu container ini TIDAK membuka port host sama sekali: Traefik meneruskan
+# request ber-Host haithamtech.com ke sini lewat network external `proxy`.
+# Network `proxy` hanya berisi Traefik + situs ini — situs tidak bisa menjangkau
+# Postgres/WAHA/n8n di network internal stack n8n. (decisions.md 2026-10-07)
+#
+# Tata letak di VPS:
 #   /srv/haithamtech/
 #   ├── docker-compose.yml   ← file ini
 #   ├── Caddyfile
 #   └── site/                ← DEPLOY_PATH (leaf!) — target rsync --delete dari deploy.yml
 #
 # PAGAR: DEPLOY_PATH harus menunjuk ./site, BUKAN parent-nya. Apa pun di dalam
-# DEPLOY_PATH bisa terhapus oleh --delete. Sertifikat hidup di named volume, di luar path itu.
-# Setup pertama: jalankan rsync dengan --dry-run sekali untuk memastikan target benar.
+# DEPLOY_PATH bisa terhapus oleh --delete.
+# Prasyarat: `docker network create proxy` dan Traefik sudah tersambung ke network itu.
+# Langkah lengkap: OVERVIEW.md §10.
 
 services:
-  caddy:
+  site:
     image: caddy:2
     restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp" # HTTP/3
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - ./site:/srv/site:ro
-      - caddy_data:/data     # sertifikat Let's Encrypt
-      - caddy_config:/config
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      - traefik.http.services.haithamtech.loadbalancer.server.port=80
+      # Fase A — HTTP. Rule Host() lebih panjang dari PathPrefix(`/`) milik n8n,
+      # jadi menurut prioritas bawaan Traefik v2 router ini yang menang untuk domain
+      # ini, sementara trafik lain tetap jatuh ke n8n.
+      - traefik.http.routers.haithamtech.rule=Host(`haithamtech.com`) || Host(`www.haithamtech.com`)
+      - traefik.http.routers.haithamtech.entrypoints=web
+      # Fase B — setelah DNS domain mengarah ke VPS: aktifkan HTTPS lewat PR
+      # tersendiri (tambah router websecure + certresolver letsencrypt, lalu
+      # redirect web → https). Jangan diaktifkan sebelum DNS siap: Traefik akan
+      # mencoba menerbitkan sertifikat dan gagal berulang.
 
-volumes:
-  caddy_data:
-  caddy_config:
+networks:
+  proxy:
+    external: true

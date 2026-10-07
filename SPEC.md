@@ -234,7 +234,7 @@ Teknis SEO:
 
 ## 10. Deployment
 
-**Infrastruktur:** VPS **Ubuntu 24.04 + Docker**. Penyajian oleh **Caddy** (HTTPS/SSL otomatis via Let's Encrypt). Auto-deploy via **GitHub Actions**.
+**Infrastruktur:** VPS **Ubuntu 24.04 + Docker**, dipakai bersama stack n8n. Pintu depan = **Traefik** milik stack n8n (port 80/443, TLS via Let's Encrypt). File statis disajikan **Caddy** di belakang Traefik — tanpa port host, lewat network Docker `proxy` (lihat `decisions.md` 2026-10-07). Auto-deploy via **GitHub Actions**. Runbook langkah demi langkah: `OVERVIEW.md` §10.
 
 **Alur deploy (git push → tayang):**
 1. Developer `git push` ke branch `main` di GitHub.
@@ -242,38 +242,21 @@ Teknis SEO:
 3. Actions mengirim isi `dist/` ke VPS via **rsync over SSH** ke direktori yang disajikan Caddy (mis. `/srv/haithamtech/site`).
 4. Caddy langsung menyajikan versi baru. Tanpa rebuild image untuk update konten.
 
-**Caddyfile (inti) — canonical non-www + redirect www + 404:**
-```
-# Redirect www → non-www (canonical tunggal, hindari duplicate content)
-www.haithamtech.com {
-    redir https://haithamtech.com{uri} permanent
-}
-
-haithamtech.com {
-    root * /srv/site
-    encode gzip zstd
-    file_server
-    handle_errors {
-        rewrite * /404.html
-        file_server
-    }
-}
-```
+**Caddyfile** (file `Caddyfile` di root repo adalah sumber kebenaran): `auto_https off` + site address berawalan `http://` (TLS diurus Traefik), redirect `www` → `https://haithamtech.com{uri}` (301), `try_files {path} {path}/index.html` (WAJIB — `decisions.md` 2026-08-23), `encode gzip zstd`, dan `handle_errors` → `/404.html`.
 
 **docker-compose.yml di VPS (garis besar):**
-- **Hanya service `caddy`** — image resmi Caddy, mount `Caddyfile`, bind-mount direktori situs, port 80 & 443, **named volume** untuk data & sertifikat.
+- **Hanya service `site`** — image resmi Caddy, mount `Caddyfile`, bind-mount direktori situs read-only, **tanpa port host**, tersambung ke network external `proxy`, dengan label Traefik `Host(haithamtech.com) || Host(www.haithamtech.com)`. Network `proxy` hanya berisi Traefik + situs; situs tidak bisa menjangkau Postgres/WAHA/n8n.
+- Sertifikat TLS disimpan Traefik (named volume di stack n8n), bukan di stack ini.
 - TIDAK ADA container analytics. Analytics memakai layanan cloud (Cloudflare Web Analytics, lihat §11) — tidak ada Postgres/database yang di-host sendiri.
 
 **PAGAR PENTING untuk `rsync --delete` (mencegah kerusakan senyap):**
 - `DEPLOY_PATH` WAJIB menunjuk **direktori situs (leaf)**, mis. `/srv/haithamtech/site` — BUKAN parent `/srv/haithamtech/`.
-- Data/sertifikat Caddy memakai **named volume Docker**, jangan bind-mount di dalam `DEPLOY_PATH`. Apa pun di dalam `DEPLOY_PATH` bisa terhapus oleh `--delete`.
+- Jangan bind-mount data/sertifikat apa pun di dalam `DEPLOY_PATH`. Apa pun di dalam `DEPLOY_PATH` bisa terhapus oleh `--delete`.
 - Saat setup pertama, jalankan rsync dengan `--dry-run` sekali untuk memastikan target benar.
 
-**Urutan setup VPS pertama (WAJIB berurutan — cegah gagal sertifikat senyap):**
-1. Pastikan A record `haithamtech.com` (+ `www`) sudah **resolve** ke `VPS_IP` (cek `dig`/`nslookup`), tunggu propagasi.
-2. Buka firewall: `ufw allow 80,443/tcp`.
-3. Jika pakai Cloudflare DNS, set mode **DNS-only (grey cloud)** saat penerbitan sertifikat pertama — bukan proxied (orange).
-4. Baru jalankan Caddy. Verifikasi HTTPS terbit benar sebelum lanjut.
+**Urutan setup VPS (dua fase — detail di `OVERVIEW.md` §10):**
+- **Fase A (tanpa domain):** network `proxy`, Traefik ditambah entrypoint :443 + resolver ACME (satu-satunya restart yang menyentuh n8n), user `deploy` + `/srv/haithamtech/site`, container situs, GitHub Secrets, rsync `--dry-run`, deploy, verifikasi dengan header `Host:`.
+- **Fase B (WAJIB berurutan — cegah gagal sertifikat senyap):** (1) A record `haithamtech.com` (+ `www`) **resolve** ke `VPS_IP` (cek `dig`); (2) bila Cloudflare DNS, mode **DNS-only (grey cloud)** saat sertifikat pertama terbit; (3) baru aktifkan label HTTPS (router `websecure` + `certresolver`) lewat PR. Verifikasi HTTPS terbit benar sebelum lanjut.
 
 **DNS (dicatat, dilakukan user):**
 - A record `haithamtech.com` → `VPS_IP`.
@@ -335,7 +318,7 @@ Kumpulkan semua di `src/consts.ts` (dan env untuk infra). AI writer memakai plac
 - [x] Desain sesuai arah Bagian 7 (bersih, ramah, terang, lembut) & responsif (mobile-first).
 - [x] Workflow `deploy.yml` tersedia (build → linkcheck → rsync, dengan pagar `DEPLOY_PATH` kosong).
 - [x] `Caddyfile` tersedia (redirect www→non-www, handle 404, `try_files {path} {path}/index.html`).
-- [x] `docker-compose.yml` tersedia (Caddy saja, named volume untuk sertifikat).
+- [x] `docker-compose.yml` tersedia (Caddy saja, di belakang Traefik stack n8n: tanpa port host, network `proxy`).
 - [x] `public/favicon.svg` ada.
 - [x] `public/og-image.png` default ada. **Titik buta gerbang:** `og:image` absolut ter-skip linkcheck, jadi file yang hilang tidak pernah muncul sebagai error.
 - [x] Social proof dibingkai sebagai riset (bersumber) / ilustrasi — tidak ada angka yang menyerupai hasil klien.
