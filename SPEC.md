@@ -303,11 +303,14 @@ Kumpulkan semua di `src/consts.ts` (dan env untuk infra). AI writer memakai plac
 | `WHATSAPP_NUMBER` | Nomor WA format internasional tanpa `+` |
 | `CONTACT_EMAIL` | Email kontak |
 | `OPERATING_HOURS` | Jam operasional / waktu respon |
+| `OPENING_HOURS_SCHEMA` | Jam operasional format schema.org (mis. `Mo-Fr 09:00-17:00`) untuk JSON-LD — selaraskan dengan `OPERATING_HOURS` |
 | `VPS_IP` | IP VPS untuk DNS. **TIDAK disimpan di `consts.ts`** — repo publik; nilainya hanya di GitHub Secrets (`SSH_HOST`) & catatan setup §10 |
 | `GSC_VERIFICATION` | Kode verifikasi Google Search Console |
 | `CF_ANALYTICS_TOKEN` | Token Cloudflare Web Analytics |
 | Statistik riset industri | Angka + **sumber** untuk social proof (tandai `TODO:` bila belum diverifikasi; jangan sajikan seolah hasil klien) |
-| Detail "Tentang" | Nama, foto, cerita pribadi |
+| `FOUNDER_NAME` | Nama orang di balik Haitham Tech (halaman Tentang) |
+| `FOUNDER_STORY` | 2–4 kalimat cerita pribadi pendiri (halaman Tentang) |
+| Foto pendiri (opsional) | Belum ada slot/konstanta — tambahkan saat fotonya tersedia (SPEC §5.4) |
 
 ---
 
@@ -336,7 +339,8 @@ Kumpulkan semua di `src/consts.ts` (dan env untuk infra). AI writer memakai plac
 - [x] `public/favicon.svg` ada.
 - [x] `public/og-image.png` default ada. **Titik buta gerbang:** `og:image` absolut ter-skip linkcheck, jadi file yang hilang tidak pernah muncul sebagai error.
 - [x] Social proof dibingkai sebagai riset (bersumber) / ilustrasi — tidak ada angka yang menyerupai hasil klien.
-- [ ] Semua placeholder terdaftar & mudah dicari; tidak ada data karangan yang menyamar sebagai fakta. Termasuk `FOUNDER_NAME`/`FOUNDER_STORY` untuk halaman Tentang (menunggu data user).
+- [x] Semua placeholder terdaftar (§12) & mudah dicari (`TODO:` di `src/consts.ts`); tidak ada data karangan yang menyamar sebagai fakta.
+- [ ] Data user terisi di `src/consts.ts`: `FOUNDER_NAME`, `FOUNDER_STORY`, `WHATSAPP_NUMBER`, `CONTACT_EMAIL`, `OPERATING_HOURS`, `OPENING_HOURS_SCHEMA`, `GSC_VERIFICATION`, `CF_ANALYTICS_TOKEN` (menunggu data user — bukan pekerjaan kode).
 
 ---
 
