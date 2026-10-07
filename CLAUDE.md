@@ -4,7 +4,7 @@
 - Situs **statis (SSG)**: **Astro 7.x** + **TypeScript**, styling **Tailwind CSS v4**. Runtime **Node.js 22 LTS**.
 - Artikel blog = Markdown via **Astro Content Collections** (`src/content/blog/`).
 - **TANPA** backend/CMS/database untuk konten. Konversi lewat link **WhatsApp & email**.
-- Deploy: build di **GitHub Actions** → rsync ke **VPS (Ubuntu 24.04 + Docker)** → disajikan **Caddy** (HTTPS otomatis). Analytics: **Cloudflare Web Analytics** (cloud, TANPA database di VPS).
+- Deploy: build di **GitHub Actions** → rsync ke **VPS (Ubuntu 24.04 + Docker)** → disajikan **Caddy** di belakang **Traefik** milik stack n8n (VPS dipakai bersama; TLS dipegang Traefik — lihat `decisions.md` 2026-10-07). Analytics: **Cloudflare Web Analytics** (cloud, TANPA database di VPS).
 - Semua konten **Bahasa Indonesia**; topik artikel selalu di orbit **AI customer service**.
 - Domain: `haithamtech.com`. Data situs terpusat di `src/consts.ts`.
 

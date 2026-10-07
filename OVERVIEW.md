@@ -7,9 +7,9 @@
 > **Status 2026-10-06 — sebagian sudah basi, baca ini dulu:**
 > - VPS **sudah dibeli**: Hostinger, VPS yang sama yang menjalankan stack n8n. Bagian 2
 >   (rekomendasi paket & biaya) kini hanya arsip pertimbangan.
-> - Checklist §10 langkah 4 (menjalankan Caddy sendiri via `docker compose up`) **tidak
->   berlaku** untuk VPS ini: port 80/443 sudah dipegang reverse proxy stack n8n. Situs
->   ditumpangkan ke proxy itu sebagai satu blok tambahan — jangan jalankan Caddy kedua.
+> - Port 80/443 dipegang Traefik stack n8n. Situs berjalan di belakangnya (Caddy tanpa
+>   port host, network `proxy`). Runbook terbaru: §10 (diperbarui 2026-10-07).
+> - Domain `haithamtech.com` **belum dibeli** (per 2026-10-07) — Fase B §10 menunggu ini.
 > - Pelacak progres resmi tetap SPEC §13; checklist §5 di bawah bukan pelacak.
 
 ---
@@ -185,21 +185,108 @@ Alasan proyek ini tetap memilih VPS (lihat `decisions.md`):
 Poin terakhir itulah pembenaran terkuatnya, dan itu juga alasan tambahan memilih 2 GB
 ketimbang 1 GB.
 
-## 10. Checklist setelah VPS dibeli
+## 10. Runbook setup VPS (VPS bersama stack n8n)
 
-Urutan ini wajib — membalik langkah 1 dan 4 menyebabkan kegagalan sertifikat senyap
-(SPEC §10).
+> Diperbarui 2026-10-07 — menggantikan checklist lama yang mengasumsikan Caddy
+> memegang port 80/443 sendiri. Alasan: `decisions.md` 2026-10-07.
+> Fakta VPS (survei read-only 2026-10-07): Traefik v2.9 di stack n8n
+> (`/root/n8n-stack-vps/docker-compose.yml`), hanya entrypoint `web` :80, provider
+> docker, n8n memakai rule ``PathPrefix(`/`)``. `/srv` kosong. ufw inactive.
 
-1. Buat A record `haithamtech.com` → IP VPS, dan `www` → IP VPS. Tunggu propagasi,
-   verifikasi dengan `dig haithamtech.com`.
-2. Di VPS: `ufw allow 80,443/tcp`.
-3. Kalau DNS via Cloudflare: set **DNS-only (grey cloud)** dulu, bukan proxied.
-4. Pasang Docker, salin `docker-compose.yml` + `Caddyfile` ke `/srv/haithamtech/`,
-   buat folder `site/`, lalu `docker compose up -d`. Verifikasi HTTPS terbit.
-5. Isi GitHub Secrets: `SSH_HOST` (IP VPS), `SSH_USER`, `SSH_PRIVATE_KEY`,
-   `DEPLOY_PATH` = `/srv/haithamtech/site` (**leaf, bukan parent**), `SSH_PORT` bila ≠22.
-6. Jalankan rsync `--dry-run` sekali secara manual untuk memastikan target benar
-   sebelum `--delete` pertama menyentuh disk.
+Gambaran: Traefik = pintu depan bersama. Request ber-Host `haithamtech.com` →
+container Caddy situs (network `proxy`, tanpa port host); selain itu tetap → n8n.
 
-> **Ingat:** IP VPS tidak boleh masuk repo — repo ini publik. Tempatnya hanya di
-> GitHub Secrets dan panel DNS.
+### Fase A — bisa sekarang, tanpa domain
+
+Semua perintah di VPS sebagai root. **Satu-satunya langkah yang menyentuh n8n
+adalah A2** (restart Traefik, n8n putus beberapa detik).
+
+**A1. Network bersama**
+```sh
+docker network create proxy
+```
+
+**A2. Ubah service `traefik` di `/root/n8n-stack-vps/docker-compose.yml`**
+Backup dulu: `cp docker-compose.yml docker-compose.yml.bak-$(date +%F)`. Lalu:
+- `command:` tambahkan (yang lama tetap):
+  ```yaml
+  - "--entrypoints.websecure.address=:443"
+  - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+  - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+  - "--certificatesresolvers.letsencrypt.acme.email=<EMAIL_BISNIS>"
+  - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+  ```
+- `ports:` tambah `"443:443"`.
+- `volumes:` tambah `traefik_letsencrypt:/letsencrypt` (+ deklarasi di `volumes:` top-level).
+- `networks:` service traefik tambah `proxy`; di `networks:` top-level tambah
+  `proxy: { external: true }`.
+
+Validasi lalu terapkan **hanya** ke traefik:
+```sh
+docker compose config -q && docker compose up -d traefik
+```
+Verifikasi n8n masih hidup: `curl -s -o /dev/null -w "%{http_code}\n" http://localhost/`
+harus sama dengan sebelum perubahan. Gagal → kembalikan backup, `docker compose up -d traefik`.
+Resolver ACME belum dipakai router mana pun, jadi belum ada permintaan sertifikat.
+
+**A3. User deploy + folder situs**
+```sh
+apt-get install -y rsync
+adduser --disabled-password --gecos "" deploy
+mkdir -p /srv/haithamtech/site
+chown deploy:deploy /srv/haithamtech/site
+```
+`/srv/haithamtech` tetap milik root: user `deploy` hanya bisa menulis ke `site/`.
+
+**A4. Container situs**
+```sh
+cd /srv/haithamtech
+curl -fsSLO https://raw.githubusercontent.com/ztalif/haithamtech-website/main/docker-compose.yml
+curl -fsSLO https://raw.githubusercontent.com/ztalif/haithamtech-website/main/Caddyfile
+docker compose up -d
+```
+
+**A5. Kunci SSH khusus GitHub Actions** (di laptop, bukan di VPS)
+```sh
+ssh-keygen -t ed25519 -N "" -C "gha-haithamtech-deploy" -f ~/.ssh/haithamtech_deploy
+```
+Public key → `/home/deploy/.ssh/authorized_keys` di VPS dengan awalan `restrict `
+(mematikan forwarding/pty; rsync tetap jalan). Folder `.ssh` 700, file 600,
+milik `deploy`. Private key **tidak pernah ditampilkan** — langsung ke Secrets:
+```sh
+gh secret set SSH_PRIVATE_KEY < ~/.ssh/haithamtech_deploy
+gh secret set SSH_HOST      # ketik IP VPS saat diminta
+gh secret set SSH_USER --body deploy
+gh secret set DEPLOY_PATH --body /srv/haithamtech/site
+```
+(`SSH_PORT` tidak perlu — port 22.)
+
+**A6. Dry-run dulu, baru deploy** (dari clone repo di laptop)
+```sh
+npm ci && npm run build
+rsync -avz --delete --dry-run -e "ssh -i ~/.ssh/haithamtech_deploy" dist/ deploy@<VPS_IP>:/srv/haithamtech/site/
+```
+Pastikan daftar file = isi `dist/` dan target = `/srv/haithamtech/site/`. Lalu
+`gh workflow run deploy.yml` dan pastikan run-nya hijau.
+
+**A7. Verifikasi di VPS (tanpa domain)**
+```sh
+curl -s -o /dev/null -w "%{http_code}\n" -H "Host: haithamtech.com" http://localhost/          # 200
+curl -s -o /dev/null -w "%{http_code}\n" -H "Host: haithamtech.com" http://localhost/artikel   # 200, bukan 301
+curl -s -o /dev/null -w "%{http_code}\n" -H "Host: haithamtech.com" http://localhost/xyz       # 404
+curl -s -o /dev/null -w "%{http_code}\n" http://localhost/                                    # n8n, sama seperti sebelumnya
+```
+
+### Fase B — setelah domain `haithamtech.com` dibeli
+
+1. A record `haithamtech.com` dan `www` → IP VPS. Cloudflare: **DNS-only (grey
+   cloud)** dulu. Verifikasi `dig +short haithamtech.com`.
+2. PR di repo ini: label router `websecure` + `tls.certresolver=letsencrypt` dan
+   redirect `web` → https untuk router situs (lihat komentar Fase B di
+   `docker-compose.yml`). Stack n8n **tidak** disentuh lagi.
+3. Di VPS: ambil ulang `docker-compose.yml`, `docker compose up -d`. Verifikasi
+   `curl -I https://haithamtech.com` → 200 dengan sertifikat valid, dan
+   `http://` + `www` → 301 ke `https://haithamtech.com`.
+
+> **Ingat:** IP VPS dan email ACME tidak boleh masuk repo — repo ini publik.
+> IP hanya di GitHub Secrets & panel DNS; email hanya di compose stack n8n di VPS.
