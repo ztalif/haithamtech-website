@@ -83,7 +83,8 @@ Seluruh kode v1 sudah selesai dan ter-merge (SPEC §13 tercentang penuh kecuali 
 poin). Yang tersisa bukan pekerjaan kode:
 
 - [ ] Isi placeholder data user: `FOUNDER_NAME`, `FOUNDER_STORY`, `WHATSAPP_NUMBER`,
-      `CONTACT_EMAIL`, `OPERATING_HOURS`, `CF_ANALYTICS_TOKEN`, `GSC_VERIFICATION`
+      `CONTACT_EMAIL`, `OPERATING_HOURS`, `OPENING_HOURS_SCHEMA`, `CF_ANALYTICS_TOKEN`,
+      `GSC_VERIFICATION`
 - [ ] Beli & siapkan VPS ← **dokumen ini**
 - [ ] Arahkan DNS, jalankan Caddy, isi GitHub Secrets, deploy pertama
 
