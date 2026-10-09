@@ -4,12 +4,15 @@
 > (itu `SPEC.md`) dan bukan aturan kerja (itu `CLAUDE.md`).
 > Disusun 2026-09-24.
 >
-> **Status 2026-10-06 — sebagian sudah basi, baca ini dulu:**
+> **Status 2026-10-07 — sebagian sudah basi, baca ini dulu:**
 > - VPS **sudah dibeli**: Hostinger, VPS yang sama yang menjalankan stack n8n. Bagian 2
 >   (rekomendasi paket & biaya) kini hanya arsip pertimbangan.
 > - Port 80/443 dipegang Traefik stack n8n. Situs berjalan di belakangnya (Caddy tanpa
 >   port host, network `proxy`). Runbook terbaru: §10 (diperbarui 2026-10-07).
-> - Domain `haithamtech.com` **belum dibeli** (per 2026-10-07) — Fase B §10 menunggu ini.
+> - **Fase A §10 SUDAH DIJALANKAN & terverifikasi** (A1–A7, 2026-10-07). Situs tayang di
+>   VPS lewat HTTP; `deploy.yml` hijau. Hasil uji ada di akhir Fase A §10.
+> - Domain `haithamtech.com` **belum dibeli** (per 2026-10-07; dikonfirmasi NXDOMAIN di
+>   resolver publik) — Fase B §10 menunggu ini. Jangan pasang label HTTPS sebelum itu.
 > - Pelacak progres resmi tetap SPEC §13; checklist §5 di bawah bukan pelacak.
 
 ---
@@ -85,8 +88,10 @@ poin). Yang tersisa bukan pekerjaan kode:
 - [ ] Isi placeholder data user: `FOUNDER_NAME`, `FOUNDER_STORY`, `WHATSAPP_NUMBER`,
       `CONTACT_EMAIL`, `OPERATING_HOURS`, `OPENING_HOURS_SCHEMA`, `CF_ANALYTICS_TOKEN`,
       `GSC_VERIFICATION`
-- [ ] Beli & siapkan VPS ← **dokumen ini**
-- [ ] Arahkan DNS, jalankan Caddy, isi GitHub Secrets, deploy pertama
+- [x] Beli & siapkan VPS ← **dokumen ini**
+- [x] Jalankan Caddy (di belakang Traefik), isi GitHub Secrets, deploy pertama —
+      Fase A §10, 2026-10-07
+- [ ] Beli domain, arahkan DNS, nyalakan HTTPS — Fase B §10
 
 ---
 
@@ -276,6 +281,25 @@ curl -s -o /dev/null -w "%{http_code}\n" -H "Host: haithamtech.com" http://local
 curl -s -o /dev/null -w "%{http_code}\n" -H "Host: haithamtech.com" http://localhost/xyz       # 404
 curl -s -o /dev/null -w "%{http_code}\n" http://localhost/                                    # n8n, sama seperti sebelumnya
 ```
+
+**Hasil Fase A — dijalankan & terverifikasi 2026-10-07:**
+
+| Langkah | Hasil |
+|---|---|
+| A1–A5 | OK. Email ACME sengaja dikosongkan (pilihan user). n8n HTTP sebelum/sesudah restart Traefik: 200 / 200. |
+| A6 dry-run | 21 file dibuat, **0 dihapus** — bukti `DEPLOY_PATH` menunjuk leaf yang benar sebelum `--delete` pertama. |
+| A6 deploy | `gh workflow run deploy.yml` → run **hijau** (34s). `/srv/haithamtech/site` berisi 12 entri. |
+| A7 | `/`=200 · `/layanan`=200 (bukan 301, `try_files` bekerja) · URL asing=404 · n8n=200. Bonus: `Host: www…`→301 ke non-www. |
+
+Dua catatan operasional untuk sesi berikutnya:
+
+- **`rsync` tidak ada di PowerShell maupun Git for Windows** di laptop ini. Pakai WSL
+  (`/usr/bin/rsync`), salin kunci ke `~/.ssh` WSL dengan `chmod 600`. Perintah
+  ssh/rsync ber-quote jangan ditulis inline dari PowerShell — quote-nya hancur; tulis
+  skrip `.sh` lalu `wsl -e bash <path>`.
+- **`known_hosts` WSL bisa memuat entri basi** untuk IP VPS (sisa host lama) sehingga
+  rsync gagal dengan `Host key verification failed`. Aman dihapus **hanya setelah**
+  fingerprint yang ditawarkan VPS dicocokkan dengan `known_hosts` Windows.
 
 ### Fase B — setelah domain `haithamtech.com` dibeli
 
